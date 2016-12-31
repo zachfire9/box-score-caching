@@ -2,6 +2,8 @@ const Good = require('good');
 const Hapi = require('hapi');
 const Mongoose = require('mongoose');
 
+const Routes = require('./routes');
+
 const server = new Hapi.Server();
 
 server.connection({ port: 8080 });
@@ -36,13 +38,7 @@ Mongoose.set('debug', true);
 server.log(['plugin', 'info', 'mongoose'], "Mongoose connecting to " + mongoUri);
 Mongoose.connect(mongoUri);
 
-server.route({
-    method: 'GET',
-    path: '/',
-    handler: function (request, reply) {
-        reply('Hello, world!');
-    }
-});
+server.route(Routes);
 
 server.register({
     register: Good,
