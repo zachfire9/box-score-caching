@@ -9,9 +9,9 @@ const options = {
 module.exports = [
     { 
         method: 'GET', 
-        path: '/boxscore/{gameid}', 
+        path: '/boxscore/{season}/{gameid}', 
         handler: function (request, reply) {
-            Wreck.get(Config.get('/feed') + '?gameid=' + request.params.gameid, options, (err, res, payload) => {
+            Wreck.get(Config.get('/feed') + request.params.season + '/game_boxscore.json?gameid=' + request.params.gameid, options, (err, res, payload) => {
                 reply(payload);
             });
         } 

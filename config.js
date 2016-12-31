@@ -5,7 +5,7 @@ const criteria = {
 };
 
 const config = {
-    feed: process.env.FEED || 'https://www.mysportsfeeds.com/api/feed/sample/pull/nba/2015-2016-regular/game_boxscore.json'
+    feed: process.env.FEED || 'https://mysportsfeeds.com/api/feed/pull/nba/'
 };
 
 const store = new Confidence.Store(config);
