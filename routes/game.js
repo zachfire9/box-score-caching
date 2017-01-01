@@ -6,9 +6,7 @@ const Underscore = require('underscore');
 const Wreck = require('wreck');
 
 const Config = require('../config');
-
-const schema = Mongoose.Schema({}, { strict: false });
-const GameModel = Mongoose.model('Game', schema);
+const GameModel = require('../models/game/schema');
 
 const options = {
     json: true
@@ -30,13 +28,13 @@ module.exports = [
                         homeTeamAbv = gameInfo.homeTeam.Abbreviation;
                         awayTeamAbv = gameInfo.awayTeam.Abbreviation;
                         gameId = date + '-' + awayTeamAbv + '-' + homeTeamAbv;
-                        startTime = Moment(gameInfo.date + ' ' + gameInfo.time, "YYYY-MM-DD HH:mmA");
-                        endTime = Moment(gameInfo.date + ' ' + gameInfo.time, "YYYY-MM-DD HH:mmA").add(4, 'hours');
-                        GameModel.findOne({ gameid: gameId }, function(err, gameRecord) {
+                        startTime = Moment(gameInfo.date + ' ' + gameInfo.time, 'YYYY-MM-DD HH:mmA');
+                        endTime = Moment(gameInfo.date + ' ' + gameInfo.time, 'YYYY-MM-DD HH:mmA').add(4, 'hours');
+                        GameModel.findOne({ gameId: gameId }, function(err, gameRecord) {
                             if (gameRecord) {
                                 return reply(Boom.conflict('This game has already been scheduled.'));
                             } else {
-                                const game = new GameModel({ season: season , gameid: gameId });
+                                const game = new GameModel({ season: season , gameId: gameId, gameDate: date });
                                 game.save(function (err, result) {
                                     if (err) {
                                         console.error(err);
@@ -44,8 +42,8 @@ module.exports = [
                                     }
                                     Later.date.localTime();
                                     const schedule = Later.parse.recur().every(5).minute()
-                                        .after(startTime.format("HH:mm")).time()
-                                        .before(endTime.format("HH:mm")).time();
+                                        .after(startTime.format('HH:mm')).time()
+                                        .before(endTime.format('HH:mm')).time();
                                     const timer = Later.setInterval(pollBoxscore, schedule);
 
                                     function pollBoxscore() {
