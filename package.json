@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/zachfire9/box-score-caching#readme",
   "dependencies": {
+    "boom": "^4.2.0",
     "confidence": "^3.0.2",
     "good": "^7.1.0",
     "good-console": "^6.2.0",

@@ -1,3 +1,4 @@
+const Boom = require('boom');
 const Later = require('later');
 const Moment = require('moment');
 const Mongoose = require('mongoose');
@@ -31,26 +32,31 @@ module.exports = [
                         gameId = date + '-' + awayTeamAbv + '-' + homeTeamAbv;
                         startTime = Moment(gameInfo.date + ' ' + gameInfo.time, "YYYY-MM-DD HH:mmA");
                         endTime = Moment(gameInfo.date + ' ' + gameInfo.time, "YYYY-MM-DD HH:mmA").add(4, 'hours');
-                        console.log(endTime.format("HH:mm"))
-                        const game = new GameModel({ season: season , gameid: gameId });
-                        game.save(function (err, result) {
-                            if (err) {
-                                console.error(err);
-                                return reply(err);
-                            }
-                            Later.date.localTime();
-                            const schedule = Later.parse.recur().every(5).minute()
-                                .after(startTime.format("HH:mm")).time()
-                                .before(endTime.format("HH:mm")).time();
-                            const timer = Later.setInterval(pollBoxscore, schedule);
+                        GameModel.findOne({ gameid: gameId }, function(err, gameRecord) {
+                            if (gameRecord) {
+                                return reply(Boom.conflict('This game has already been scheduled.'));
+                            } else {
+                                const game = new GameModel({ season: season , gameid: gameId });
+                                game.save(function (err, result) {
+                                    if (err) {
+                                        console.error(err);
+                                        return reply(err);
+                                    }
+                                    Later.date.localTime();
+                                    const schedule = Later.parse.recur().every(5).minute()
+                                        .after(startTime.format("HH:mm")).time()
+                                        .before(endTime.format("HH:mm")).time();
+                                    const timer = Later.setInterval(pollBoxscore, schedule);
 
-                            function pollBoxscore() {
-                                request.server.inject('/boxscore/' + season + '/' + gameId, function (response) {
-                                    console.log(response.result);
+                                    function pollBoxscore() {
+                                        request.server.inject('/boxscore/' + season + '/' + gameId, function (response) {
+                                            console.log(response.result);
+                                        });
+                                    }
+
+                                    return reply(true);
                                 });
                             }
-
-                            return reply(true);
                         });
                     }
                 })
