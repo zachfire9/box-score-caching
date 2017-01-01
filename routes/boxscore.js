@@ -3,6 +3,9 @@ const Wreck = require('wreck');
 
 const Config = require('../config');
 
+const schema = Mongoose.Schema({}, { strict: false });
+const BoxscoreModel = Mongoose.model('Boxscore', schema);
+
 const options = {
     json: true
 }
@@ -13,8 +16,6 @@ module.exports = [
         path: '/boxscore/{season}/{gameid}', 
         handler: function (request, reply) {
             Wreck.get(Config.get('/feed') + request.params.season + '/game_boxscore.json?gameid=' + request.params.gameid, options, (err, res, payload) => {
-                const schema = Mongoose.Schema({}, { strict: false });
-                const BoxscoreModel = Mongoose.model('Boxscore', schema);
                 const boxscore = new BoxscoreModel(payload);
                 boxscore.save(function (err, result) {
                     if (err) {
