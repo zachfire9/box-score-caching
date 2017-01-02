@@ -15,7 +15,7 @@ const options = {
 module.exports = [
     { 
         method: 'POST', 
-        path: '/game/{season}/{date}/{team}', 
+        path: '/game/season/{season}/date/{date}/team/{team}', 
         handler: function (request, reply) {
             // @TODO break this up into pre's
             const season = request.params.season;
@@ -47,7 +47,7 @@ module.exports = [
                                     const timer = Later.setInterval(pollBoxscore, schedule);
 
                                     function pollBoxscore() {
-                                        request.server.inject('/boxscore/' + season + '/' + gameId, function (response) {
+                                        request.server.inject('/boxscore/season/' + season + '/game/' + gameId, function (response) {
                                             console.log(response.result);
                                         });
                                     }

@@ -1,6 +1,6 @@
-const Good = require('good');
 const Hapi = require('hapi');
 const Mongoose = require('mongoose');
+const Underscore = require('underscore');
 
 const Routes = require('./routes');
 
@@ -40,8 +40,46 @@ Mongoose.connect(mongoUri);
 
 server.route(Routes);
 
+const boxscoreHandler = function (request, reply) {
+
+    const season = request.params.season;
+    const gameId = request.params.gameId;
+    const quarter = request.params.quarter;
+    const minutesLeft = request.params.minutesLeft;
+    const secondsLeft = request.params.secondsLeft;
+
+    request.server.inject('/boxscore/season/' + season + '/game/' + gameId + '/quarter/' + quarter + '/minutes/' + minutesLeft + '/seconds/' + secondsLeft, function (response) {
+        const record = response.result.toJSON()
+        const lastQuarter = Underscore.last(record.gameboxscore.quarterSummary.quarter);
+        const lastScoringPlay = Underscore.last(lastQuarter.scoring.scoringPlay);
+        reply.view('boxscore', {
+            title: 'Boxscore',
+            message: record,
+            lastQuarter: lastQuarter,
+            lastScoringPlay: lastScoringPlay
+        });
+    });
+};
+
+server.register(require('vision'), (err) => {
+
+    if (err) {
+        console.log("Failed to load vision.");
+    }
+
+    server.views({
+        engines: { jade: require('jade') },
+        path: __dirname + '/templates',
+        compileOptions: {
+            pretty: true
+        }
+    });
+
+    server.route({ method: 'GET', path: '/season/{season}/game/{gameId}/quarter/{quarter}/minutes/{minutesLeft}/seconds/{secondsLeft}', handler: boxscoreHandler });
+});
+
 server.register({
-    register: Good,
+    register: require('good'),
     options: {
         reporters: {
             console: [{
