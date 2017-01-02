@@ -3,7 +3,6 @@ const Moment = require('moment');
 const Underscore = require('underscore');
 const Wreck = require('wreck');
 
-const Config = require('../config');
 const BoxscoreModel = require('../models/boxscore/schema');
 const GameModel = require('../models/game/schema');
 

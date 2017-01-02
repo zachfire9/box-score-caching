@@ -2,13 +2,15 @@ const Hapi = require('hapi');
 const Mongoose = require('mongoose');
 const Underscore = require('underscore');
 
+
+const Config = require('./config');
 const Routes = require('./routes');
 
 const server = new Hapi.Server();
 
 server.connection({ port: 8080 });
 
-mongoUri = 'mongodb://localhost:27017';
+mongoUri = Config.get('/mongoUri');
 
 server.on('stop', function () { Mongoose.disconnect(); });
 
