@@ -15,13 +15,13 @@ const options = {
 module.exports = [
     { 
         method: 'POST', 
-        path: '/game/season/{season}/date/{date}/team/{team}', 
+        path: '/api/game', 
         handler: function (request, reply) {
             // @TODO break this up into pre's
-            const season = request.params.season;
-            const date = request.params.date;
-            const team = request.params.team;
-            Wreck.get(Config.get('/feed') + request.params.season + '/daily_game_schedule.json?fordate=' + request.params.date, options, (err, res, payload) => {
+            const season = request.payload.season;
+            const date = request.payload.date;
+            const team = request.payload.team;
+            Wreck.get(Config.get('/feed') + season + '/daily_game_schedule.json?fordate=' + date, options, (err, res, payload) => {
                 // @TODO check to make sure an object is returned if not return an error
                 Underscore.each(payload.dailygameschedule.gameentry, function (gameInfo) {
                     if (gameInfo.awayTeam.Name === team || gameInfo.homeTeam.Name === team) {
@@ -44,11 +44,26 @@ module.exports = [
                                     const schedule = Later.parse.recur().every(5).minute()
                                         .after(startTime.format('HH:mm')).time()
                                         .before(endTime.format('HH:mm')).time();
-                                    const timer = Later.setInterval(pollBoxscore, schedule);
 
                                     function pollBoxscore() {
-                                        request.server.inject('/boxscore/season/' + season + '/game/' + gameId, function (response) {
-                                            console.log(response.result);
+                                        Wreck.get(Config.get('/feed') + season + '/game_boxscore.json?gameid=' + gameId, options, (err, res, payload) => {
+                                            const quarterInfo = Underscore.last(payload.gameboxscore.quarterSummary.quarter);
+                                            const currentQuarter = quarterInfo['@number'];
+                                            const lastScoringPlay = Underscore.last(quarterInfo.scoring.scoringPlay);
+                                            const currentTime = Moment.duration('00:' + lastScoringPlay.time);
+                                            const currentMinutesLeft = currentTime.minutes();
+                                            const currentSecondsLeft = currentTime.seconds();
+                                            payload.gameId = request.params.gameId;
+                                            if (currentQuarter - 1 === 0) {
+                                                payload.currentTime = currentMinutesLeft + (currentSecondsLeft / 60);
+                                            } else {
+                                                payload.currentTime = ((currentQuarter - 1) * 12) + currentMinutesLeft + (currentSecondsLeft / 60);
+                                            }
+
+                                            const req = { method: 'POST', url: '/api/boxscore', payload: payload };
+                                            request.server.inject(req, function (response) {
+                                                console.log(response.result);
+                                            });
                                         });
                                     }
 

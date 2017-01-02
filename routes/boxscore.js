@@ -13,44 +13,30 @@ const options = {
 
 module.exports = [
     { 
-        method: 'GET', 
-        path: '/boxscore/season/{season}/game/{gameId}', 
+        method: 'POST', 
+        path: '/api/boxscore', 
         handler: function (request, reply) {
-            Wreck.get(Config.get('/feed') + request.params.season + '/game_boxscore.json?gameid=' + request.params.gameId, options, (err, res, payload) => {
-                const quarterInfo = Underscore.last(payload.gameboxscore.quarterSummary.quarter);
-                const currentQuarter = quarterInfo['@number'];
-                const lastScoringPlay = Underscore.last(quarterInfo.scoring.scoringPlay);
-                const currentTime = Moment.duration('00:' + lastScoringPlay.time);
-                const currentMinutesLeft = currentTime.minutes();
-                const currentSecondsLeft = currentTime.seconds();
-                payload.gameId = request.params.gameId;
-                payload.gameTime = Moment(payload.gameboxscore.lastUpdatedOn);
-                if (currentQuarter - 1 === 0) {
-                    payload.currentTime = currentMinutesLeft + (currentSecondsLeft / 60);
-                } else {
-                    payload.currentTime = ((currentQuarter - 1) * 12) + currentMinutesLeft + (currentSecondsLeft / 60);
+            const payload = request.payload;
+            const boxscore = new BoxscoreModel(payload);
+            boxscore.save(function (err, result) {
+                if (err) {
+                    console.error(err);
+                    return reply(err);
                 }
-
-                const boxscore = new BoxscoreModel(payload);
-                boxscore.save(function (err, result) {
-                    if (err) {
-                        console.error(err);
-                        return reply(err);
-                    }
-                    return reply(true);
-                });
+                return reply(true);
             });
         } 
     },
     { 
         method: 'GET', 
-        path: '/boxscore/season/{season}/game/{gameId}/quarter/{quarter}/minutes/{minutesLeft}/seconds/{secondsLeft}', 
+        path: '/api/boxscore', 
         handler: function (request, reply) {
-            const season = request.params.season;
-            const gameId = request.params.gameId;
-            const quarter = request.params.quarter;
-            const minutes = 11 - request.params.minutesLeft;
-            const seconds = 60 - request.params.secondsLeft;
+            console.log(request.query);
+            const season = request.query.season;
+            const gameId = request.query.gameId;
+            const quarter = request.query.quarter;
+            const minutes = 11 - request.query.minutes;
+            const seconds = 60 - request.query.seconds;
 
             if (quarter === 1) {
                 currentTime = minutes + (seconds / 60);

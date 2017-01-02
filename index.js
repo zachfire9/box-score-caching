@@ -42,13 +42,13 @@ server.route(Routes);
 
 const boxscoreHandler = function (request, reply) {
 
-    const season = request.params.season;
-    const gameId = request.params.gameId;
-    const quarter = request.params.quarter;
-    const minutesLeft = request.params.minutesLeft;
-    const secondsLeft = request.params.secondsLeft;
+    const season = request.query.season;
+    const gameId = request.query.gameId;
+    const quarter = request.query.quarter;
+    const minutes = request.query.minutes;
+    const seconds = request.query.seconds;
 
-    request.server.inject('/boxscore/season/' + season + '/game/' + gameId + '/quarter/' + quarter + '/minutes/' + minutesLeft + '/seconds/' + secondsLeft, function (response) {
+    request.server.inject('/api/boxscore?season=' + season + '&gameId=' + gameId + '&quarter=' + quarter + '&minutes=' + minutes + '&seconds=' + seconds, function (response) {
         const record = response.result.toJSON()
         const lastQuarter = Underscore.last(record.gameboxscore.quarterSummary.quarter);
         const lastScoringPlay = Underscore.last(lastQuarter.scoring.scoringPlay);
@@ -75,7 +75,7 @@ server.register(require('vision'), (err) => {
         }
     });
 
-    server.route({ method: 'GET', path: '/season/{season}/game/{gameId}/quarter/{quarter}/minutes/{minutesLeft}/seconds/{secondsLeft}', handler: boxscoreHandler });
+    server.route({ method: 'GET', path: '/boxscore', handler: boxscoreHandler });
 });
 
 server.register({
