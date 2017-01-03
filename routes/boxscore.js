@@ -30,7 +30,6 @@ module.exports = [
         method: 'GET', 
         path: '/api/boxscore', 
         handler: function (request, reply) {
-            console.log(request.query);
             const season = request.query.season;
             const gameId = request.query.gameId;
             const quarter = request.query.quarter;
@@ -42,8 +41,6 @@ module.exports = [
             } else {
                 currentTime = ((quarter - 1) * 12) + minutes + (seconds / 60);
             }
-
-            console.log(currentTime);
 
             GameModel.findOne({ gameId: gameId }, function(err, gameRecord) {
                 BoxscoreModel.findOne({ gameId: gameId, currentTime: { '$lte': currentTime } }, function(err, boxscoreRecord) {

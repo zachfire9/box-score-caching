@@ -1,0 +1,26 @@
+doctype html
+html
+  head
+    title #{title}
+  body
+    block content
+        h1 Boxscore
+        form(method="post", action="/boxscore")
+            div
+                label Season
+                input(type="text", name="season", value="2016-2017-regular")
+            div
+                label Game ID
+                input(type="text", name="gameId") 
+                | (i.e. 20170101-ORL-IND {date}-{away team abbv}-{home team abbv})
+            div
+                label Quarter
+                input(type="text", name="quarter")
+            div
+                label Minutes
+                input(type="text", name="minutes")
+            div
+                label Seconds
+                input(type="text", name="seconds")
+            div
+                button(type="submit") Submit

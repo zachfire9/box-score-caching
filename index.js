@@ -42,13 +42,20 @@ Mongoose.connect(mongoUri);
 
 server.route(Routes);
 
+const boxscoreFormHandler = function (request, reply) {
+
+    reply.view('boxscoreform', {
+        title: 'Boxscore',
+    });
+};
+
 const boxscoreHandler = function (request, reply) {
 
-    const season = request.query.season;
-    const gameId = request.query.gameId;
-    const quarter = request.query.quarter;
-    const minutes = request.query.minutes;
-    const seconds = request.query.seconds;
+    const season = request.payload.season;
+    const gameId = request.payload.gameId;
+    const quarter = request.payload.quarter;
+    const minutes = request.payload.minutes;
+    const seconds = request.payload.seconds;
 
     request.server.inject('/api/boxscore?season=' + season + '&gameId=' + gameId + '&quarter=' + quarter + '&minutes=' + minutes + '&seconds=' + seconds, function (response) {
         const record = response.result.toJSON()
@@ -77,7 +84,8 @@ server.register(require('vision'), (err) => {
         }
     });
 
-    server.route({ method: 'GET', path: '/boxscore', handler: boxscoreHandler });
+    server.route({ method: 'GET', path: '/boxscoreform', handler: boxscoreFormHandler });
+    server.route({ method: 'POST', path: '/boxscore', handler: boxscoreHandler });
 });
 
 server.register({
