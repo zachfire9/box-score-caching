@@ -57,7 +57,7 @@ const boxscoreHandler = function (request, reply) {
     const minutes = request.payload.minutes;
     const seconds = request.payload.seconds;
 
-    request.server.inject('/api/boxscore?season=' + season + '&gameId=' + gameId + '&quarter=' + quarter + '&minutes=' + minutes + '&seconds=' + seconds, function (response) {
+    request.server.inject('/api/boxscores?season=' + season + '&gameId=' + gameId + '&quarter=' + quarter + '&minutes=' + minutes + '&seconds=' + seconds, function (response) {
         const record = response.result.toJSON()
         const lastQuarter = Underscore.last(record.gameboxscore.quarterSummary.quarter);
         const lastScoringPlay = Underscore.last(lastQuarter.scoring.scoringPlay);
@@ -86,6 +86,18 @@ server.register(require('vision'), (err) => {
 
     server.route({ method: 'GET', path: '/boxscoreform', handler: boxscoreFormHandler });
     server.route({ method: 'POST', path: '/boxscore', handler: boxscoreHandler });
+});
+
+server.register({
+    register: require('./plugins/box-score-polling'),
+    options: {
+        pollingEnabled: Config.get('/pollingEnabled')
+    }
+}, (err) => {
+
+    if (err) {
+        console.log("Failed to load box-score-polling.");
+    }
 });
 
 server.register({

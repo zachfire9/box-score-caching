@@ -1,0 +1,10 @@
+{
+  "name": "box-score-polling",
+  "version": "1.0.0",
+  "description": "Scheduled polling of box score data.",
+  "main": "index.js",
+  "author": "Zach Firestone",
+  "peerDependencies": {
+    "hapi": ">=10.x.x"
+  }
+}

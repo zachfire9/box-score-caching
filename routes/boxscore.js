@@ -1,7 +1,6 @@
 const Mongoose = require('mongoose');
 const Moment = require('moment');
 const Underscore = require('underscore');
-const Wreck = require('wreck');
 
 const BoxscoreModel = require('../models/boxscore/schema');
 const GameModel = require('../models/game/schema');
@@ -13,23 +12,28 @@ const options = {
 module.exports = [
     { 
         method: 'POST', 
-        path: '/api/boxscore', 
+        path: '/api/boxscores', 
         handler: function (request, reply) {
+
             const payload = request.payload;
             const boxscore = new BoxscoreModel(payload);
             boxscore.save(function (err, result) {
+
                 if (err) {
+                    console.log('POST /api/boxscores Error:');
                     console.error(err);
                     return reply(err);
                 }
+
                 return reply(true);
             });
         } 
     },
     { 
         method: 'GET', 
-        path: '/api/boxscore', 
+        path: '/api/boxscores', 
         handler: function (request, reply) {
+
             const season = request.query.season;
             const gameId = request.query.gameId;
             const quarter = request.query.quarter;
@@ -43,7 +47,9 @@ module.exports = [
             }
 
             GameModel.findOne({ gameId: gameId }, function(err, gameRecord) {
+
                 BoxscoreModel.findOne({ gameId: gameId, currentTime: { '$lte': currentTime } }, function(err, boxscoreRecord) {
+
                     return reply(boxscoreRecord);
                 });
             });
