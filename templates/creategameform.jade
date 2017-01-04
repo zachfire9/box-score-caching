@@ -1,0 +1,21 @@
+doctype html
+html
+  head
+    title #{title}
+  body
+    block content
+        h1 Game
+        form(method="post", action="/game")
+            div
+                label Season
+                input(type="text", name="season", value="2016-2017-regular")
+            div
+                label Date
+                input(type="text", name="date") 
+                | (i.e. 20170101)
+            div
+                label Team
+                input(type="text", name="team")
+                | (i.e. Magic)
+            div
+                button(type="submit") Submit

@@ -1,7 +1,7 @@
 const Hapi = require('hapi');
+const Moment = require('moment');
 const Mongoose = require('mongoose');
 const Underscore = require('underscore');
-
 
 const Config = require('./config');
 const Routes = require('./routes');
@@ -41,6 +41,38 @@ server.log(['plugin', 'info', 'mongoose'], "Mongoose connecting to " + mongoUri)
 Mongoose.connect(mongoUri);
 
 server.route(Routes);
+
+const createGameFormHandler = function (request, reply) {
+
+    reply.view('creategameform', {
+        title: 'Create Game',
+    });
+};
+
+const gameFormHandler = function (request, reply) {
+
+    const payload = {
+        season: request.payload.season,
+        date: request.payload.date,
+        team: request.payload.team
+    };
+
+    const req = { method: 'POST', url: '/api/games', payload: payload };
+
+    request.server.inject(req, function (response) {
+        console.log(response.result);
+        const record = response.result.toJSON()
+        const date = Moment(record.date).format("dddd, MMMM Do YYYY");
+        const startTime = Moment(record.startTime).format("h:mm:ss a");
+        const endTime = Moment(record.endTime).format("h:mm:ss a");
+        reply.view('game', {
+            title: 'Game',
+            date: date,
+            startTime: startTime,
+            endTime: endTime
+        });
+    });
+};
 
 const boxscoreFormHandler = function (request, reply) {
 
@@ -86,6 +118,8 @@ server.register(require('vision'), (err) => {
 
     server.route({ method: 'GET', path: '/boxscoreform', handler: boxscoreFormHandler });
     server.route({ method: 'POST', path: '/boxscore', handler: boxscoreHandler });
+    server.route({ method: 'GET', path: '/creategameform', handler: createGameFormHandler });
+    server.route({ method: 'POST', path: '/game', handler: gameFormHandler });
 });
 
 server.register({
