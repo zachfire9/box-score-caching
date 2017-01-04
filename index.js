@@ -60,7 +60,7 @@ const gameFormHandler = function (request, reply) {
     const req = { method: 'POST', url: '/api/games', payload: payload };
 
     request.server.inject(req, function (response) {
-        console.log(response.result);
+
         const record = response.result.toJSON()
         const date = Moment(record.date).format("dddd, MMMM Do YYYY");
         const startTime = Moment(record.startTime).format("h:mm:ss a");
@@ -90,6 +90,7 @@ const boxscoreHandler = function (request, reply) {
     const seconds = request.payload.seconds;
 
     request.server.inject('/api/boxscores?season=' + season + '&gameId=' + gameId + '&quarter=' + quarter + '&minutes=' + minutes + '&seconds=' + seconds, function (response) {
+
         const record = response.result.toJSON()
         const lastQuarter = Underscore.last(record.gameboxscore.quarterSummary.quarter);
         const lastScoringPlay = Underscore.last(lastQuarter.scoring.scoringPlay);
