@@ -6,7 +6,7 @@ const Underscore = require('underscore');
 const Wreck = require('wreck');
 
 const Config = require('../config');
-const GameModel = require('../models/game/schema');
+const GamesModel = require('../models/games/schema');
 
 const options = {
     json: true
@@ -20,18 +20,16 @@ module.exports = [
 
             const query = request.query;
             if (request.query.searchType && request.query.searchType === 'betweenTime') {
-                request.query.searchTime = 1483403400000;
                 query.startTime = { $lte: request.query.searchTime };
                 query.endTime = { $gte: request.query.searchTime };
                 delete query.searchType;
                 delete query.searchTime;
             }
 
-            GameModel.find(query, function(err, gameRecords) {
+            GamesModel.find(query, function(err, gameRecords) {
 
                 if (err) {
-                    console.log('GET /api/games Error:');
-                    console.log(err);
+                    request.log('error', err);
                     return reply(Boom.badImplementation());
                 }
 
@@ -52,8 +50,7 @@ module.exports = [
             Wreck.get(Config.get('/feed') + season + '/daily_game_schedule.json?fordate=' + date, options, (err, res, payload) => {
 
                 if (err) {
-                    console.log('POST /api/games Error:');
-                    console.log(err);
+                    request.log('error', err);
                     return reply(Boom.badGateway('There was an error returned from the feed.'));
                 }
 
@@ -71,7 +68,7 @@ module.exports = [
                         startTime = Moment(gameInfo.date + ' ' + gameInfo.time, 'YYYY-MM-DD HH:mmA');
                         endTime = Moment(gameInfo.date + ' ' + gameInfo.time, 'YYYY-MM-DD HH:mmA').add(4, 'hours');
 
-                        GameModel.findOne({ feedId: feedId }, function(err, gameRecord) {
+                        GamesModel.findOne({ feedId: feedId }, function(err, gameRecord) {
 
                             if (gameRecord) {
                                 return reply(Boom.conflict('This game has already been scheduled.'));
@@ -84,7 +81,7 @@ module.exports = [
                                     endTime: endTime
                                 };
 
-                                const game = new GameModel(gameObject);
+                                const game = new GamesModel(gameObject);
                                 game.save(function (err, result) {
 
                                     if (err) {

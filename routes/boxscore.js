@@ -1,9 +1,12 @@
+'use strict';
+
+const Boom = require('boom');
 const Mongoose = require('mongoose');
 const Moment = require('moment');
 const Underscore = require('underscore');
 
-const BoxscoreModel = require('../models/boxscore/schema');
-const GameModel = require('../models/game/schema');
+const BoxscoresModel = require('../models/boxscores/schema');
+const GamesModel = require('../models/games/schema');
 
 const options = {
     json: true
@@ -16,13 +19,12 @@ module.exports = [
         handler: function (request, reply) {
 
             const payload = request.payload;
-            const boxscore = new BoxscoreModel(payload);
+            const boxscore = new BoxscoresModel(payload);
             boxscore.save(function (err, result) {
 
                 if (err) {
-                    console.log('POST /api/boxscores Error:');
-                    console.error(err);
-                    return reply(err);
+                    request.log('error', err);
+                    return reply(Boom.badImplementation());
                 }
 
                 return reply(true);
@@ -34,24 +36,49 @@ module.exports = [
         path: '/api/boxscores', 
         handler: function (request, reply) {
 
-            const season = request.query.season;
-            const gameId = request.query.gameId;
-            const quarter = request.query.quarter;
-            const minutes = 11 - request.query.minutes;
-            const seconds = 60 - request.query.seconds;
+            const query = request.query;
 
-            if (quarter === 1) {
-                currentTime = minutes + (seconds / 60);
-            } else {
-                currentTime = ((quarter - 1) * 12) + minutes + (seconds / 60);
+            if (query.findClosestToTime) {
+                let currentTime = 0;
+                const quarter = parseInt(query.quarter);
+                const minutes = parseInt(query.minutes);
+                const seconds = parseInt(query.seconds);
+                delete query.findClosestToTime;
+                delete query.quarter;
+                delete query.minutes;
+                delete query.seconds;
+
+                if (quarter === 1) {
+                    currentTime = minutes + (seconds / 60);
+                } else {
+                    currentTime = ((quarter - 1) * 12) + minutes + (seconds / 60);
+                }
+
+                query.currentTime = { '$lte': currentTime };
             }
 
-            GameModel.findOne({ gameId: gameId }, function(err, gameRecord) {
+            BoxscoresModel.find(query, function(err, boxscoreRecord) {
 
-                BoxscoreModel.findOne({ gameId: gameId, currentTime: { '$lte': currentTime } }, function(err, boxscoreRecord) {
+                if (err) {
+                    request.log('error', err);
+                    return reply(Boom.badImplementation());
+                }
 
-                    return reply(boxscoreRecord);
-                });
+                return reply(boxscoreRecord);
+            });
+        }
+    },
+    { 
+        method: 'GET', 
+        path: '/api/boxscores/{boxscoreId}', 
+        handler: function (request, reply) {
+
+            const query = request.query;
+            query._id = boxscoreId;
+
+            BoxscoresModel.find(query, function(err, boxscoreRecord) {
+
+                return reply(boxscoreRecord);
             });
         } 
     }

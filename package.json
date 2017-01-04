@@ -1,17 +1,18 @@
 {
   "name": "box-score-caching",
   "version": "1.0.0",
-  "description": "",
+  "description": "Cache box scores throughout a game and look up stats based on game time.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "lab -t 80",
+    "test-cov-html": "lab -r html -o coverage.html"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zachfire9/box-score-caching.git"
   },
-  "author": "",
+  "author": "Zach Firestone",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/zachfire9/box-score-caching/issues"
@@ -31,5 +32,10 @@
     "underscore": "^1.8.3",
     "vision": "^4.1.1",
     "wreck": "^10.0.0"
+  },
+  "devDependencies": {
+    "code": "^4.0.0",
+    "lab": "^11.2.1",
+    "sinon": "^1.17.7"
   }
 }
