@@ -10,7 +10,7 @@ const GamesModel = require('../models/games/schema');
 
 const options = {
     json: true
-}
+};
 
 module.exports = [
     { 
@@ -27,7 +27,7 @@ module.exports = [
                     return reply(Boom.badImplementation());
                 }
 
-                return reply(true);
+                return reply(result);
             });
         } 
     },
@@ -74,9 +74,14 @@ module.exports = [
         handler: function (request, reply) {
 
             const query = request.query;
-            query._id = boxscoreId;
+            query._id = request.params.boxscoreId;
 
             BoxscoresModel.find(query, function(err, boxscoreRecord) {
+
+                if (err) {
+                    request.log('error', err);
+                    return reply(Boom.badImplementation());
+                }
 
                 return reply(boxscoreRecord);
             });

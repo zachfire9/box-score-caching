@@ -1,14 +1,18 @@
+'use strict';
+
 const Confidence = require('confidence');
 
 const criteria = {
     env: process.env.NODE_ENV
 };
 
+// $lab:coverage:off$
 const config = {
     pollingEnabled: process.env.PROFILEENABLED || false,
     mongoUri: process.env.MONGOURI || 'mongodb://localhost:27017/box-score-caching',
     feed: process.env.FEED || 'https://mysportsfeeds.com/api/feed/pull/nba/'
 };
+// $lab:coverage:on$
 
 const store = new Confidence.Store(config);
 

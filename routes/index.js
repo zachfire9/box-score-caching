@@ -1,3 +1,5 @@
+'use strict';
+
 const Boxscore = require('./boxscore');
 const Game = require('./game');
 

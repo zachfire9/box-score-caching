@@ -1,3 +1,5 @@
+'use strict';
+
 const Hapi = require('hapi');
 const Moment = require('moment');
 const Mongoose = require('mongoose');
