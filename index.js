@@ -12,7 +12,7 @@ const server = new Hapi.Server();
 
 server.connection({ port: 8080 });
 
-mongoUri = Config.get('/mongoUri');
+const mongoUri = Config.get('/mongoUri');
 
 server.on('stop', function () { Mongoose.disconnect(); });
 
