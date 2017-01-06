@@ -10,7 +10,7 @@ const Routes = require('./routes');
 
 const server = new Hapi.Server();
 
-server.connection({ port: 8080 });
+server.connection({ port: Config.get('/port') });
 
 const mongoUri = Config.get('/mongoUri');
 
