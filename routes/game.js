@@ -66,12 +66,13 @@ const findTeamInGameFeed = function (request, reply) {
             const startTime = Moment(feedGames[count].date + ' ' + feedGames[count].time, 'YYYY-MM-DD HH:mmA');
             const endTime = Moment(feedGames[count].date + ' ' + feedGames[count].time, 'YYYY-MM-DD HH:mmA').add(4, 'hours');
 
+            // @TODO add a test to make sure time is UTC
             gameInfo = {
                 feedId: feedId,
                 seasonId: request.payload.season,
                 date: request.payload.date,
-                startTime: startTime,
-                endTime: endTime
+                startTime: startTime.utcOffset("-05:00").format('x'),
+                endTime: endTime.utcOffset("-05:00").format('x')
             };
         }
     }

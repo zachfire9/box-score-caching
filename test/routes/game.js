@@ -100,7 +100,7 @@ lab.describe('Game Tests', () => {
         };
 
         const payload = {
-            date: '20170104',
+            date: '20170101',
             team: 'Magic'
         };
 
@@ -155,7 +155,7 @@ lab.describe('Game Tests', () => {
 
         const payload = {
             season: '2016-2017-regular',
-            date: '20170104',
+            date: '20170101',
         };
 
         const req = { method: 'POST', url: '/api/games', payload: payload };
@@ -182,7 +182,7 @@ lab.describe('Game Tests', () => {
 
         const payload = {
             season: '2016-2017-regular',
-            date: '20170104',
+            date: '20170101',
             team: 'Magic'
         };
 
@@ -212,7 +212,7 @@ lab.describe('Game Tests', () => {
 
         const payload = {
             season: '2016-2017-regular',
-            date: '20170104',
+            date: '20170101',
             team: 'Magic'
         };
 
@@ -240,7 +240,7 @@ lab.describe('Game Tests', () => {
 
         const payload = {
             season: '2016-2017-regular',
-            date: '20170104',
+            date: '20170101',
             team: 'Magic'
         };
 
@@ -268,7 +268,7 @@ lab.describe('Game Tests', () => {
 
         const payload = {
             season: '2016-2017-regular',
-            date: '20170104',
+            date: '20170101',
             team: 'Magic'
         };
 
@@ -300,7 +300,7 @@ lab.describe('Game Tests', () => {
 
         const payload = {
             season: '2016-2017-regular',
-            date: '20170104',
+            date: '20170101',
             team: 'Magic'
         };
 
@@ -332,7 +332,7 @@ lab.describe('Game Tests', () => {
 
         const payload = {
             season: '2016-2017-regular',
-            date: '20170104',
+            date: '20170101',
             team: 'Magic'
         };
 
@@ -352,7 +352,7 @@ lab.describe('Game Tests', () => {
             dailygameschedule: {
                 gameentry: [{
                     id: '34469',
-                    date: '2017-01-04',
+                    date: '2017-01-01',
                     time: '7:00PM',
                     awayTeam: {
                         ID: '96',
@@ -383,7 +383,7 @@ lab.describe('Game Tests', () => {
 
         const payload = {
             season: '2016-2017-regular',
-            date: '20170104',
+            date: '20170101',
             team: 'Magic'
         };
 
@@ -403,7 +403,7 @@ lab.describe('Game Tests', () => {
             dailygameschedule: {
                 gameentry: [{
                     id: '34469',
-                    date: '2017-01-04',
+                    date: '2017-01-01',
                     time: '7:00PM',
                     awayTeam: {
                         ID: '96',
@@ -427,11 +427,11 @@ lab.describe('Game Tests', () => {
         .yields(null, {}, feedResponse);
 
         const mockGameRecord = {
-            feedId: '20170101-ORL-IND',
+            feedId: '20170101-ORL-CHA',
             seasonId: '2016-2017-regular',
             date: '20170104',
-            startTime: 1483574400000,
-            endTime: 1483588800000
+            startTime: 1483315200000,
+            endTime: 1483329600000
         };
 
         Sinon
@@ -446,7 +446,7 @@ lab.describe('Game Tests', () => {
 
         const payload = {
             season: '2016-2017-regular',
-            date: '20170104',
+            date: '20170101',
             team: 'Magic'
         };
 
@@ -467,7 +467,7 @@ lab.describe('Game Tests', () => {
             dailygameschedule: {
                 gameentry: [{
                     id: '34469',
-                    date: '2017-01-04',
+                    date: '2017-01-01',
                     time: '7:00PM',
                     awayTeam: {
                         ID: '96',
@@ -502,7 +502,7 @@ lab.describe('Game Tests', () => {
 
         const payload = {
             season: '2016-2017-regular',
-            date: '20170104',
+            date: '20170101',
             team: 'Magic'
         };
 
@@ -523,7 +523,7 @@ lab.describe('Game Tests', () => {
             dailygameschedule: {
                 gameentry: [{
                     id: '34469',
-                    date: '2017-01-04',
+                    date: '2017-01-01',
                     time: '7:00PM',
                     awayTeam: {
                         ID: '96',
@@ -560,7 +560,7 @@ lab.describe('Game Tests', () => {
 
         const payload = {
             season: '2016-2017-regular',
-            date: '20170104',
+            date: '20170101',
             team: 'Magic'
         };
 
@@ -582,7 +582,7 @@ lab.describe('Game Tests', () => {
             dailygameschedule: {
                 gameentry: [{
                     id: '34469',
-                    date: '2017-01-04',
+                    date: '2017-01-01',
                     time: '7:00PM',
                     awayTeam: {
                         ID: '96',
@@ -602,11 +602,11 @@ lab.describe('Game Tests', () => {
         };
 
         const mockGameRecord = {
-            feedId: '20170101-ORL-IND',
+            feedId: '20170101-ORL-CHA',
             seasonId: '2016-2017-regular',
-            date: '20170104',
-            startTime: 1483574400000,
-            endTime: 1483588800000
+            date: '20170101',
+            startTime: 1483315200000,
+            endTime: 1483329600000
         };
 
         Sinon
@@ -621,7 +621,7 @@ lab.describe('Game Tests', () => {
 
         const payload = {
             season: '2016-2017-regular',
-            date: '20170104',
+            date: '20170101',
             team: 'Magic'
         };
 

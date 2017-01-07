@@ -16,7 +16,7 @@ exports.register = function (server, options, next) {
 
         function getGames() {
 
-            server.inject('/api/games?searchType=betweenTime&searchTime=' + Moment().format('x'), function (response) {
+            server.inject('/api/games?searchType=betweenTime&searchTime=' + Moment().utc().format('x'), function (response) {
 
                 Underscore.each(response.result, function (gameRecord) {
 
