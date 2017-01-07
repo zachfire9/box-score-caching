@@ -71,8 +71,8 @@ const findTeamInGameFeed = function (request, reply) {
                 feedId: feedId,
                 seasonId: request.payload.season,
                 date: request.payload.date,
-                startTime: startTime.utcOffset("-05:00").format('x'),
-                endTime: endTime.utcOffset("-05:00").format('x')
+                startTime: parseInt(startTime.utcOffset("+05:00").format('x')),
+                endTime: parseInt(endTime.utcOffset("+05:00").format('x'))
             };
         }
     }

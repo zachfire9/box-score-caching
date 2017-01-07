@@ -65,8 +65,8 @@ const gameFormHandler = function (request, reply) {
 
         const record = response.result.toJSON()
         const date = Moment(record.date).format("dddd, MMMM Do YYYY");
-        const startTime = Moment(record.startTime).format("h:mm:ss a");
-        const endTime = Moment(record.endTime).format("h:mm:ss a");
+        const startTime = Moment(record.startTime).utcOffset("-05:00").format("h:mm:ss a");
+        const endTime = Moment(record.endTime).utcOffset("-05:00").format("h:mm:ss a");
         reply.view('game', {
             title: 'Game',
             date: date,
