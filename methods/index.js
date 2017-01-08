@@ -11,13 +11,11 @@ const getGames = function (server, searchTime, reply) {
     server.inject('/api/games?searchType=betweenTime&searchTime=' + searchTime, function (response) {
 
         if (response.result.error) {
-            server.log('error', response.result.error);
             return reply(response.result.error);
         }
 
         if (Underscore.isEmpty(response.result)) {
-            server.log('info', 'No games were found to be polled at this time.');
-            return reply('No games were found to be polled at this time.');
+            return reply(null, 'No games were found to be polled at this time.');
         }
 
         Underscore.each(response.result, function (gameRecord) {

@@ -8,8 +8,8 @@ const criteria = {
 
 // $lab:coverage:off$
 const config = {
-    port: process.env.PORT || 8080,
-    pollingEnabled: process.env.PROFILEENABLED || false,
+    port: parseInt(process.env.PORT) || 8080,
+    pollingEnabled: parseInt(process.env.PROFILEENABLED) || false,
     pollingSchedule: process.env.POLLINGSCHEDULE || 'every 5 mins',
     mongoUri: process.env.MONGOURI || 'mongodb://localhost:27017/box-score-caching',
     feed: process.env.FEED || 'https://mysportsfeeds.com/api/feed/pull/nba/'
