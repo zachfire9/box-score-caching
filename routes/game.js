@@ -2,7 +2,7 @@
 
 const Boom = require('boom');
 const Later = require('later');
-const Moment = require('moment');
+const Moment = require('moment-timezone');
 const Mongoose = require('mongoose');
 const Underscore = require('underscore');
 const Wreck = require('wreck');
@@ -63,8 +63,8 @@ const findTeamInGameFeed = function (request, reply) {
             const homeTeamAbv = feedGames[count].homeTeam.Abbreviation;
             const awayTeamAbv = feedGames[count].awayTeam.Abbreviation;
             const feedId = request.payload.date + '-' + awayTeamAbv + '-' + homeTeamAbv;
-            const startTime = Moment(feedGames[count].date + ' ' + feedGames[count].time, 'YYYY-MM-DD HH:mmA');
-            const endTime = Moment(feedGames[count].date + ' ' + feedGames[count].time, 'YYYY-MM-DD HH:mmA').add(4, 'hours');
+            const startTime = Moment.tz(feedGames[count].date + ' ' + feedGames[count].time, 'YYYY-MM-DD HH:mmA', 'America/New_York');
+            const endTime = Moment.tz(feedGames[count].date + ' ' + feedGames[count].time, 'YYYY-MM-DD HH:mmA', 'America/New_York').add(4, 'hours');
 
             // @TODO add a test to make sure time is UTC
             gameInfo = {
