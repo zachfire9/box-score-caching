@@ -92,7 +92,7 @@ const boxscoreHandler = function (request, reply) {
     const minutes = 11 - request.payload.minutes;
     const seconds = 60 - request.payload.seconds;
 
-    request.server.inject('/api/boxscores?findClosestToTime=true&season=' + season + '&gameId=' + gameId + '&quarter=' + quarter + '&minutes=' + minutes + '&seconds=' + seconds, function (response) {
+    request.server.inject('/api/boxscores?findClosestToTime=true&gameId=' + gameId + '&quarter=' + quarter + '&minutes=' + minutes + '&seconds=' + seconds, function (response) {
 
         const record = response.result.toJSON()
         const lastQuarter = Underscore.last(record.gameboxscore.quarterSummary.quarter);
