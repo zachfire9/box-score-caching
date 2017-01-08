@@ -21,7 +21,7 @@ lab.describe('Boxscore tests', () => {
     lab.beforeEach(function (done) {
         
         mock.server = new Hapi.Server();
-        mock.server.connection({port: 8080});
+        mock.server.connection({port: 8081});
         mock.server.route(Routes);
         done();
     });

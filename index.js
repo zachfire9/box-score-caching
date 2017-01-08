@@ -126,10 +126,14 @@ server.register(require('vision'), (err) => {
     server.route({ method: 'POST', path: '/game', handler: gameFormHandler });
 });
 
+require('./methods')(server, {});
+
 server.register({
     register: require('./plugins/box-score-polling'),
     options: {
-        pollingEnabled: Config.get('/pollingEnabled')
+        feed: Config.get('/feed'),
+        pollingEnabled: Config.get('/pollingEnabled'),
+        pollingSchedule: Config.get('/pollingSchedule')
     }
 }, (err) => {
 
