@@ -38,11 +38,11 @@ const getGames = function (server, searchTime, reply) {
                         const quarterInfo = payload.gameboxscore.quarterSummary.quarter;
                         createBoxscore(server, gameObject.feedId, quarterInfo, function (boxscoreObject) {
 
+                            Underscore.extend(boxscoreObject, payload);
                             const req = { method: 'POST', url: '/api/boxscores', payload: boxscoreObject };
                             server.inject(req, function (response) {
 
-                                server.log('info', 'Response from POSTing box score:');
-                                server.log('info', response);
+                                server.log('info', 'Box score posted for game: ' + gameObject.feedId);
                             });
                         });
                     }

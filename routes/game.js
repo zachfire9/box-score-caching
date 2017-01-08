@@ -123,8 +123,8 @@ module.exports = [
 
             const query = request.query;
             if (request.query.searchType && request.query.searchType === 'betweenTime') {
-                query.startTime = { $lte: request.query.searchTime };
-                query.endTime = { $gte: request.query.searchTime };
+                query.startTime = { $lte: parseInt(request.query.searchTime) };
+                query.endTime = { $gte: parseInt(request.query.searchTime) };
                 delete query.searchType;
                 delete query.searchTime;
             }

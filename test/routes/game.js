@@ -65,8 +65,8 @@ lab.describe('Game Tests', () => {
     lab.test('Get games - searchType', (done) => {
 
         const expectedQuery = { 
-            startTime: { '$lte': '1483563730000' },
-            endTime: { '$gte': '1483563730000' } 
+            startTime: { '$lte': 1483563730000 },
+            endTime: { '$gte': 1483563730000 } 
         };
 
         Sinon
