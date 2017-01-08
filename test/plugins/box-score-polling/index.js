@@ -68,7 +68,7 @@ lab.describe('Boxs Score Polling tests', () => {
         mock.server.methods.getGames(mock.server, Moment().utc().format('x'), function (err, result) {
 
             Games.find.restore();
-            Code.expect(err).to.equal('No games were found to be polled at this time.');
+            Code.expect(result).to.equal('No games were found to be polled at this time.');
             done();
         });
     });
