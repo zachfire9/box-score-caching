@@ -36,7 +36,7 @@ module.exports = [
         path: '/api/boxscores', 
         handler: function (request, reply) {
 
-            const query = request.query;
+            let query = request.query;
 
             if (query.findClosestToTime) {
                 let currentTime = 0;
@@ -55,6 +55,8 @@ module.exports = [
                 }
 
                 query.currentTime = { '$lte': currentTime };
+                // Return results in descending order.
+                query = { $query: query, $orderby: { currentTime : -1 } }
             }
 
             BoxscoresModel.find(query, function(err, boxscoreRecord) {

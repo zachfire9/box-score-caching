@@ -37,7 +37,9 @@ Mongoose.connection.on('timeout', function(err) {
     server.log(['plugin', 'info', 'mongoose'], "Mongoose timeout: " + (err.stack || err));
 });
 
-Mongoose.set('debug', true);
+if (process.env.NODE_ENV !== 'production') {
+    Mongoose.set('debug', true);
+}
 
 server.log(['plugin', 'info', 'mongoose'], "Mongoose connecting to " + mongoUri);
 Mongoose.connect(mongoUri);
@@ -94,15 +96,19 @@ const boxscoreHandler = function (request, reply) {
 
     request.server.inject('/api/boxscores?findClosestToTime=true&gameId=' + gameId + '&quarter=' + quarter + '&minutes=' + minutes + '&seconds=' + seconds, function (response) {
 
-        const record = response.result.toJSON()
-        const lastQuarter = Underscore.last(record.gameboxscore.quarterSummary.quarter);
-        const lastScoringPlay = Underscore.last(lastQuarter.scoring.scoringPlay);
-        reply.view('boxscore', {
+        let viewObject = {
             title: 'Boxscore',
-            message: record,
-            lastQuarter: lastQuarter,
-            lastScoringPlay: lastScoringPlay
-        });
+            error: true
+        };
+
+        if (response.result && response.result.length > 0) {
+            const record = response.result[0].toJSON();
+            viewObject.message = record;
+            viewObject.lastQuarter = Underscore.last(record.gameboxscore.quarterSummary.quarter);
+            viewObject.lastScoringPlay = Underscore.last(viewObject.lastQuarter.scoring.scoringPlay);
+        }
+
+        reply.view('boxscore', viewObject);
     });
 };
 

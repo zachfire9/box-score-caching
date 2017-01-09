@@ -101,14 +101,13 @@ lab.describe('Boxscore tests', () => {
     lab.test('Get boxscores - findClosestToTime - quarter 1', (done) => {
         
         const expectedQuery = {
-            season: '2016-2017-regular',
             gameId: '20170101-ORL-IND',
             currentTime: { '$lte': 10.5 }
         };
 
         Sinon
         .stub(Boxscores, 'find')
-        .withArgs(expectedQuery)
+        .withArgs({ $query: expectedQuery, $orderby: { currentTime : -1 } })
         .yields(null, []);
 
         const season = '2016-2017-regular';
@@ -118,7 +117,7 @@ lab.describe('Boxscore tests', () => {
         const seconds = 30;
 
         const path = '/api/boxscores';
-        const querystring = '?findClosestToTime=true&season=' + season + '&gameId=' + gameId + '&quarter=' + quarter + '&minutes=' + minutes + '&seconds=' + seconds;
+        const querystring = '?findClosestToTime=true&gameId=' + gameId + '&quarter=' + quarter + '&minutes=' + minutes + '&seconds=' + seconds;
 
         mock.server.inject(Url.resolve(path, querystring), function (response) {
 
@@ -133,14 +132,13 @@ lab.describe('Boxscore tests', () => {
     lab.test('Get boxscores - findClosestToTime - quarter 2', (done) => {
         
         const expectedQuery = {
-            season: '2016-2017-regular',
             gameId: '20170101-ORL-IND',
             currentTime: { '$lte': 22.5 }
         };
 
         Sinon
         .stub(Boxscores, 'find')
-        .withArgs(expectedQuery)
+        .withArgs({ $query: expectedQuery, $orderby: { currentTime : -1 } })
         .yields(null, []);
 
         const season = '2016-2017-regular';
@@ -150,7 +148,7 @@ lab.describe('Boxscore tests', () => {
         const seconds = 30;
 
         const path = '/api/boxscores';
-        const querystring = '?findClosestToTime=true&season=' + season + '&gameId=' + gameId + '&quarter=' + quarter + '&minutes=' + minutes + '&seconds=' + seconds;
+        const querystring = '?findClosestToTime=true&gameId=' + gameId + '&quarter=' + quarter + '&minutes=' + minutes + '&seconds=' + seconds;
 
         mock.server.inject(Url.resolve(path, querystring), function (response) {
 
