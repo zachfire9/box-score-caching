@@ -1,21 +1,16 @@
-doctype html
-html
-  head
-    title #{title}
-  body
-    block content
+extends ./layout
+block body
+    div(style="width: 300px").center-block
         h1 Game
-        form(method="post", action="/game")
-            div
-                label Season
-                input(type="text", name="season", value="2016-2017-regular")
-            div
-                label Date
-                input(type="text", name="date") 
-                | (i.e. 20170101)
-            div
-                label Team
-                input(type="text", name="team")
-                | (i.e. Magic)
-            div
-                button(type="submit") Submit
+        form(method="post", action="/game").form-horizontal
+            div.form-group
+                label(for="season") Season
+                input(type="text", name="season", value="2016-2017-regular").form-control
+            div.form-group
+                label(for="date") Date
+                input(type="text", name="date", placeholder="20170101").form-control
+            div.form-group
+                label(for="team") Team
+                input(type="text", name="team", placeholder="Magic").form-control
+            div.form-group
+                button(type="submit").btn.btn-primary Submit

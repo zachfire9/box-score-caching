@@ -1,42 +1,89 @@
-doctype html
-html
-  head
-    title #{title}
-  body
+extends ./layout
+block body
     h1 Boxscore
     p Quarter: #{lastQuarter['@number']}
     p Last Scoring Play Time: #{lastScoringPlay.time}
 
     h2 Away Team
-    each entry, i in message.gameboxscore.awayTeam.awayPlayers.playerEntry
-        h3 #{entry.player.FirstName} #{entry.player.LastName}
-        if entry.stats
-            p Field Goals: #{entry.stats.FgMade['#text']}/#{entry.stats.FgAtt['#text']}
-            p Three Pointers: #{entry.stats.Fg3PtMade['#text']}/#{entry.stats.Fg3PtAtt['#text']}
-            p Free Throws: #{entry.stats.FtMade['#text']}/#{entry.stats.FtAtt['#text']}
-            p Points: #{entry.stats.Pts['#text']}
-            p Assists: #{entry.stats.Ast['#text']}
-            p Rebounds: #{entry.stats.Reb['#text']}
-            p Blocks: #{entry.stats.Blk['#text']}
-            p Steals: #{entry.stats.Stl['#text']}
-            p Turn Overs: #{entry.stats.Tov['#text']}
-            p Fouls: #{entry.stats.Fouls['#text']}
-        else
-            p No Stats
+    table.table.table-hover
+        thead
+            tr
+                th Player
+                th Field Goals
+                th Three Pointers
+                th Free Throws
+                th Points
+                th Assists
+                th Rebounds
+                th Blocks
+                th Steals
+                th Turn Overs
+                th Fouls
+        tbody
+            each entry, i in message.gameboxscore.awayTeam.awayPlayers.playerEntry
+                tr
+                if entry.stats
+                    td #{entry.player.FirstName} #{entry.player.LastName}
+                    td #{entry.stats.FgMade['#text']}/#{entry.stats.FgAtt['#text']}
+                    td #{entry.stats.Fg3PtMade['#text']}/#{entry.stats.Fg3PtAtt['#text']}
+                    td #{entry.stats.FtMade['#text']}/#{entry.stats.FtAtt['#text']}
+                    td #{entry.stats.Pts['#text']}
+                    td #{entry.stats.Ast['#text']}
+                    td #{entry.stats.Reb['#text']}
+                    td #{entry.stats.Blk['#text']}
+                    td #{entry.stats.Stl['#text']}
+                    td #{entry.stats.Tov['#text']}
+                    td #{entry.stats.Fouls['#text']}
+                else
+                    td #{entry.player.FirstName} #{entry.player.LastName}
+                    td N/A
+                    td N/A
+                    td N/A
+                    td N/A
+                    td N/A
+                    td N/A
+                    td N/A
+                    td N/A
+                    td N/A
 
     h2 Home Team
-    each entry, i in message.gameboxscore.homeTeam.homePlayers.playerEntry
-        h3 #{entry.player.FirstName} #{entry.player.LastName}
-        if entry.stats
-            p Field Goals: #{entry.stats.FgAtt['#text']}/#{entry.stats.FgMade['#text']}
-            p Three Pointers: #{entry.stats.Fg3PtAtt['#text']}/#{entry.stats.Fg3PtMade['#text']}
-            p Free Throws: #{entry.stats.FtAtt['#text']}/#{entry.stats.FtMade['#text']}
-            p Points: #{entry.stats.Pts['#text']}
-            p Assists: #{entry.stats.Ast['#text']}
-            p Rebounds: #{entry.stats.Reb['#text']}
-            p Blocks: #{entry.stats.Blk['#text']}
-            p Steals: #{entry.stats.Stl['#text']}
-            p Turn Overs: #{entry.stats.Tov['#text']}
-            p Fouls: #{entry.stats.Fouls['#text']}
-        else
-            p No Stats
+    table.table.table-hover
+        thead
+            tr
+                th Player
+                th Field Goals
+                th Three Pointers
+                th Free Throws
+                th Points
+                th Assists
+                th Rebounds
+                th Blocks
+                th Steals
+                th Turn Overs
+                th Fouls
+        tbody
+            each entry, i in message.gameboxscore.homeTeam.homePlayers.playerEntry
+                tr
+                if entry.stats
+                    td #{entry.player.FirstName} #{entry.player.LastName}
+                    td #{entry.stats.FgMade['#text']}/#{entry.stats.FgAtt['#text']}
+                    td #{entry.stats.Fg3PtMade['#text']}/#{entry.stats.Fg3PtAtt['#text']}
+                    td #{entry.stats.FtMade['#text']}/#{entry.stats.FtAtt['#text']}
+                    td #{entry.stats.Pts['#text']}
+                    td #{entry.stats.Ast['#text']}
+                    td #{entry.stats.Reb['#text']}
+                    td #{entry.stats.Blk['#text']}
+                    td #{entry.stats.Stl['#text']}
+                    td #{entry.stats.Tov['#text']}
+                    td #{entry.stats.Fouls['#text']}
+                else
+                    td #{entry.player.FirstName} #{entry.player.LastName}
+                    td N/A
+                    td N/A
+                    td N/A
+                    td N/A
+                    td N/A
+                    td N/A
+                    td N/A
+                    td N/A
+                    td N/A
