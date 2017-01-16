@@ -384,7 +384,7 @@ lab.describe('Game Tests', () => {
         const payload = {
             season: '2016-2017-regular',
             date: '20170101',
-            team: 'Magic'
+            team: 'ORL'
         };
 
         const req = { method: 'POST', url: '/api/games', payload: payload };
@@ -447,7 +447,7 @@ lab.describe('Game Tests', () => {
         const payload = {
             season: '2016-2017-regular',
             date: '20170101',
-            team: 'Magic'
+            team: 'ORL'
         };
 
         const req = { method: 'POST', url: '/api/games', payload: payload };
@@ -503,7 +503,7 @@ lab.describe('Game Tests', () => {
         const payload = {
             season: '2016-2017-regular',
             date: '20170101',
-            team: 'Magic'
+            team: 'ORL'
         };
 
         const req = { method: 'POST', url: '/api/games', payload: payload };
@@ -561,7 +561,7 @@ lab.describe('Game Tests', () => {
         const payload = {
             season: '2016-2017-regular',
             date: '20170101',
-            team: 'Magic'
+            team: 'ORL'
         };
 
         const req = { method: 'POST', url: '/api/games', payload: payload };
@@ -622,7 +622,7 @@ lab.describe('Game Tests', () => {
         const payload = {
             season: '2016-2017-regular',
             date: '20170101',
-            team: 'Magic'
+            team: 'ORL'
         };
 
         const req = { method: 'POST', url: '/api/games', payload: payload };
