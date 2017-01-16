@@ -41,7 +41,9 @@ if (process.env.NODE_ENV !== 'production') {
 server.log(['plugin', 'info', 'mongoose'], "Mongoose connecting to " + mongoUri);
 Mongoose.connect(mongoUri);
 
-server.register(require('vision'), (err) => {
+server.register(
+    require('vision'), 
+    (err) => {
 
     if (err) {
         console.log("Failed to load vision.");
@@ -52,6 +54,33 @@ server.register(require('vision'), (err) => {
         path: __dirname + '/templates',
         compileOptions: {
             pretty: true
+        }
+    });
+});
+
+server.register(
+    require('inert'), 
+    (err) => {
+
+    if (err) {
+        console.log("Failed to load inert.");
+    }
+
+    server.route({
+        method: 'GET',
+        path: '/assets/js/main.js',
+        handler: function (request, reply) {
+
+            reply.file('./assets/js/main.js');
+        }
+    });
+
+    server.route({
+        method: 'GET',
+        path: '/assets/css/main.css',
+        handler: function (request, reply) {
+
+            reply.file('./assets/css/main.css');
         }
     });
 });

@@ -45,7 +45,10 @@ const boxscoreFormHandler = function (request, reply) {
 const boxscoreHandler = function (request, reply) {
 
     const season = request.payload.season;
-    const gameId = request.payload.gameId;
+    const date = request.payload.date;
+    const teamAway = request.payload.teamAway;
+    const teamHome = request.payload.teamHome;
+    const gameId = [date, teamAway, teamHome].join('-');
     const quarter = request.payload.quarter;
 
     const minutes = 11 - request.payload.minutes;

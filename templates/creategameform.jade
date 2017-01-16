@@ -2,15 +2,46 @@ extends ./layout
 block body
     div(style="width: 300px").center-block
         h1 Game
-        form(method="post", action="/game").form-horizontal
+        form(method="post", action="/game", data-toggle="validator").form-horizontal
             div.form-group
                 label(for="season") Season
-                input(type="text", name="season", value="2016-2017-regular").form-control
-            div.form-group
+                input(type="text", name="season", value="2016-2017-regular", autocomplete="off", readonly).form-control
+            div.form-group.row.date
                 label(for="date") Date
-                input(type="text", name="date", placeholder="20170101").form-control
+                input(type="text", name="date", placeholder="20170101", autocomplete="off", required).form-control#datepicker
             div.form-group
                 label(for="team") Team
-                input(type="text", name="team", placeholder="Magic").form-control
+                select(name="team", required).form-control
+                    option(value='') Select Team
+                    option(value='ATL') Atlanta Hawks
+                    option(value='BKN') Brooklyn Nets
+                    option(value='BOS') Boston Celtics
+                    option(value='CHA') Charlotte Hornets
+                    option(value='CHI') Chicago Bulls
+                    option(value='CLE') Cleveland Cavaliers
+                    option(value='DAL') Dallas Mavericks
+                    option(value='DEN') Denver Nuggets
+                    option(value='DET') Detroit Pistons
+                    option(value='GSW') Golden State Warriors
+                    option(value='HOU') Houston Rockets
+                    option(value='IND') Indiana Pacers
+                    option(value='LAC') Los Angeles Clippers
+                    option(value='LAL') Los Angeles Lakers
+                    option(value='MEM') Memphis Grizzlies
+                    option(value='MIA') Miami Heat
+                    option(value='MIL') Milwaukee Bucks
+                    option(value='MIN') Minnesota Timberwolves
+                    option(value='NOP') New Orleans Pelicans
+                    option(value='NYK') New York Knicks
+                    option(value='OKC') Oklahoma City Thunder
+                    option(value='ORL') Orlando Magic
+                    option(value='PHI') Philadelphia 76ers
+                    option(value='PHX') Phoenix Suns
+                    option(value='POR') Portland Trail Blazers
+                    option(value='SAC') Sacramento Kings
+                    option(value='SAS') San Antonio Spurs
+                    option(value='TOR') Toronto Raptors
+                    option(value='UTA') Utah Jazz
+                    option(value='WAS') Washington Wizards
             div.form-group
                 button(type="submit").btn.btn-primary Submit

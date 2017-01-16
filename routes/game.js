@@ -59,7 +59,7 @@ const findTeamInGameFeed = function (request, reply) {
     let gameInfo = null;
 
     for (let count = 0; count < feedGames.length; count++) {
-        if (feedGames[count].awayTeam.Name === request.payload.team || feedGames[count].homeTeam.Name === request.payload.team) {
+        if (feedGames[count].awayTeam.Abbreviation === request.payload.team || feedGames[count].homeTeam.Abbreviation === request.payload.team) {
             const homeTeamAbv = feedGames[count].homeTeam.Abbreviation;
             const awayTeamAbv = feedGames[count].awayTeam.Abbreviation;
             const feedId = request.payload.date + '-' + awayTeamAbv + '-' + homeTeamAbv;
