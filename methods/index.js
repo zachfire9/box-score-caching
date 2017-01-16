@@ -8,21 +8,22 @@ const Config = require('../config');
 
 const getGames = function (server, searchTime, reply) {
 
-    server.inject('/api/games?searchType=betweenTime&searchTime=' + searchTime, function (response) {
+    server.inject('/api/games?searchType=betweenTime&searchTime=' + searchTime, (responseGames) => {
 
-        if (response.result.error) {
-            return reply(response.result.error);
+        if (responseGames.result.error) {
+            return reply(responseGames.result.error);
         }
 
-        if (Underscore.isEmpty(response.result)) {
+        if (Underscore.isEmpty(responseGames.result)) {
             return reply(null, 'No games were found to be polled at this time.');
         }
 
-        Underscore.each(response.result, function (gameRecord) {
+        Underscore.each(responseGames.result, (gameRecord) => {
 
             if (Underscore.isEmpty(gameRecord)) {
                 server.log('info', 'Empty gameRecord returned.');
-            } else {
+            }
+            else {
                 const gameObject = gameRecord.toJSON();
                 const endpoint = Config.get('/feed') + gameObject.seasonId + '/game_boxscore.json?gameid=' + gameObject.feedId;
 
@@ -30,17 +31,20 @@ const getGames = function (server, searchTime, reply) {
 
                     if (err) {
                         server.log('error', err);
-                    } else if (Underscore.isEmpty(payload)) {
+                    }
+                    else if (Underscore.isEmpty(payload)) {
                         server.log('error', 'Empty payload returned from feed when looking up box score.');
-                    } else if (!payload.gameboxscore || !payload.gameboxscore.quarterSummary || !payload.gameboxscore.quarterSummary.quarter) {
+                    }
+                    else if (!payload.gameboxscore || !payload.gameboxscore.quarterSummary || !payload.gameboxscore.quarterSummary.quarter) {
                         server.log('info', 'No quarter info currently in the box score.');
-                    } else {
+                    }
+                    else {
                         const quarterInfo = payload.gameboxscore.quarterSummary.quarter;
-                        createBoxscore(server, gameObject.feedId, quarterInfo, function (boxscoreObject) {
+                        createBoxscore(server, gameObject.feedId, quarterInfo, (boxscoreObject) => {
 
                             Underscore.extend(boxscoreObject, payload);
                             const req = { method: 'POST', url: '/api/boxscores', payload: boxscoreObject };
-                            server.inject(req, function (response) {
+                            server.inject(req, (responseBoxscores) => {
 
                                 server.log('info', 'Box score posted for game: ' + gameObject.feedId);
                             });
@@ -50,15 +54,15 @@ const getGames = function (server, searchTime, reply) {
             }
         });
 
-        reply(null, response.result);
+        reply(null, responseGames.result);
     });
 };
 
 const createBoxscore = function (server, gameId, quarter, reply) {
 
-    let boxscoreObject = {
-        gameId: gameId
-    }
+    const boxscoreObject = {
+        gameId
+    };
 
     const quarterInfo = Underscore.last(quarter);
     const currentQuarter = quarterInfo['@number'];
@@ -66,10 +70,11 @@ const createBoxscore = function (server, gameId, quarter, reply) {
     const currentTime = Moment.duration('00:' + lastScoringPlay.time);
     const currentMinutesLeft = currentTime.minutes();
     const currentSecondsLeft = currentTime.seconds();
-    
+
     if (currentQuarter - 1 === 0) {
         boxscoreObject.currentTime = currentMinutesLeft + (currentSecondsLeft / 60);
-    } else {
+    }
+    else {
         boxscoreObject.currentTime = ((currentQuarter - 1) * 12) + currentMinutesLeft + (currentSecondsLeft / 60);
     }
 

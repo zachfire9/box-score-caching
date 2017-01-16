@@ -3,7 +3,6 @@
 const Code = require('code');
 const Hapi = require('hapi');
 const Lab = require('lab');
-const Moment = require('moment');
 const Mongoose = require('mongoose');
 const Sinon = require('sinon');
 const Url = require('url');
@@ -20,10 +19,10 @@ lab.describe('Game Tests', () => {
         server: null
     };
 
-    lab.beforeEach(function (done) {
-        
+    lab.beforeEach((done) => {
+
         mock.server = new Hapi.Server();
-        mock.server.connection({port: 8081});
+        mock.server.connection({ port: 8081 });
         mock.server.route(Routes);
         done();
     });
@@ -34,7 +33,7 @@ lab.describe('Game Tests', () => {
         .stub(Games, 'find')
         .yields(null, []);
 
-        mock.server.inject('/api/games', function (response) {
+        mock.server.inject('/api/games', (response) => {
 
             Games.find.restore();
             Code.expect(response.result).to.equal([]);
@@ -54,7 +53,7 @@ lab.describe('Game Tests', () => {
             'statusCode': 500
         };
 
-        mock.server.inject('/api/games', function (response) {
+        mock.server.inject('/api/games', (response) => {
 
             Games.find.restore();
             Code.expect(response.result).to.equal(expectedError);
@@ -64,9 +63,9 @@ lab.describe('Game Tests', () => {
 
     lab.test('Get games - searchType', (done) => {
 
-        const expectedQuery = { 
+        const expectedQuery = {
             startTime: { '$lte': 1483563730000 },
-            endTime: { '$gte': 1483563730000 } 
+            endTime: { '$gte': 1483563730000 }
         };
 
         Sinon
@@ -74,12 +73,12 @@ lab.describe('Game Tests', () => {
         .withArgs(expectedQuery)
         .yields(null, []);
 
-        const searchTime = 1483563730000; 
+        const searchTime = 1483563730000;
 
         const path = '/api/games';
         const querystring = '?searchType=betweenTime&searchTime=' + searchTime;
 
-        mock.server.inject(Url.resolve(path, querystring), function (response) {
+        mock.server.inject(Url.resolve(path, querystring), (response) => {
 
             Games.find.restore();
             Code.expect(response.result).to.equal([]);
@@ -104,9 +103,9 @@ lab.describe('Game Tests', () => {
             team: 'Magic'
         };
 
-        const req = { method: 'POST', url: '/api/games', payload: payload };
+        const req = { method: 'POST', url: '/api/games', payload };
 
-        mock.server.inject(req, function (response) {
+        mock.server.inject(req, (response) => {
 
             Wreck.get.restore();
             Code.expect(response.result).to.equal(expectedError);
@@ -131,9 +130,9 @@ lab.describe('Game Tests', () => {
             team: 'Magic'
         };
 
-        const req = { method: 'POST', url: '/api/games', payload: payload };
+        const req = { method: 'POST', url: '/api/games', payload };
 
-        mock.server.inject(req, function (response) {
+        mock.server.inject(req, (response) => {
 
             Wreck.get.restore();
             Code.expect(response.result).to.equal(expectedError);
@@ -155,12 +154,12 @@ lab.describe('Game Tests', () => {
 
         const payload = {
             season: '2016-2017-regular',
-            date: '20170101',
+            date: '20170101'
         };
 
-        const req = { method: 'POST', url: '/api/games', payload: payload };
+        const req = { method: 'POST', url: '/api/games', payload };
 
-        mock.server.inject(req, function (response) {
+        mock.server.inject(req, (response) => {
 
             Wreck.get.restore();
             Code.expect(response.result).to.equal(expectedError);
@@ -186,9 +185,9 @@ lab.describe('Game Tests', () => {
             team: 'Magic'
         };
 
-        const req = { method: 'POST', url: '/api/games', payload: payload };
+        const req = { method: 'POST', url: '/api/games', payload };
 
-        mock.server.inject(req, function (response) {
+        mock.server.inject(req, (response) => {
 
             Wreck.get.restore();
             Code.expect(response.result).to.equal(expectedError);
@@ -216,9 +215,9 @@ lab.describe('Game Tests', () => {
             team: 'Magic'
         };
 
-        const req = { method: 'POST', url: '/api/games', payload: payload };
+        const req = { method: 'POST', url: '/api/games', payload };
 
-        mock.server.inject(req, function (response) {
+        mock.server.inject(req, (response) => {
 
             Wreck.get.restore();
             Code.expect(response.result).to.equal(expectedError);
@@ -244,9 +243,9 @@ lab.describe('Game Tests', () => {
             team: 'Magic'
         };
 
-        const req = { method: 'POST', url: '/api/games', payload: payload };
+        const req = { method: 'POST', url: '/api/games', payload };
 
-        mock.server.inject(req, function (response) {
+        mock.server.inject(req, (response) => {
 
             Wreck.get.restore();
             Code.expect(response.result).to.equal(expectedError);
@@ -272,9 +271,9 @@ lab.describe('Game Tests', () => {
             team: 'Magic'
         };
 
-        const req = { method: 'POST', url: '/api/games', payload: payload };
+        const req = { method: 'POST', url: '/api/games', payload };
 
-        mock.server.inject(req, function (response) {
+        mock.server.inject(req, (response) => {
 
             Wreck.get.restore();
             Code.expect(response.result).to.equal(expectedError);
@@ -286,7 +285,7 @@ lab.describe('Game Tests', () => {
 
         const feedResponse = {
             test: 'test'
-        }
+        };
 
         Sinon
         .stub(Wreck, 'get')
@@ -304,9 +303,9 @@ lab.describe('Game Tests', () => {
             team: 'Magic'
         };
 
-        const req = { method: 'POST', url: '/api/games', payload: payload };
+        const req = { method: 'POST', url: '/api/games', payload };
 
-        mock.server.inject(req, function (response) {
+        mock.server.inject(req, (response) => {
 
             Wreck.get.restore();
             Code.expect(response.result).to.equal(expectedError);
@@ -318,7 +317,7 @@ lab.describe('Game Tests', () => {
 
         const feedResponse = {
             dailygameschedule: {}
-        }
+        };
 
         Sinon
         .stub(Wreck, 'get')
@@ -336,9 +335,9 @@ lab.describe('Game Tests', () => {
             team: 'Magic'
         };
 
-        const req = { method: 'POST', url: '/api/games', payload: payload };
+        const req = { method: 'POST', url: '/api/games', payload };
 
-        mock.server.inject(req, function (response) {
+        mock.server.inject(req, (response) => {
 
             Wreck.get.restore();
             Code.expect(response.result).to.equal(expectedError);
@@ -369,7 +368,7 @@ lab.describe('Game Tests', () => {
                     location: 'Time Warner Cable Arena'
                 }]
             }
-        }
+        };
 
         Sinon
         .stub(Wreck, 'get')
@@ -387,9 +386,9 @@ lab.describe('Game Tests', () => {
             team: 'ORL'
         };
 
-        const req = { method: 'POST', url: '/api/games', payload: payload };
+        const req = { method: 'POST', url: '/api/games', payload };
 
-        mock.server.inject(req, function (response) {
+        mock.server.inject(req, (response) => {
 
             Wreck.get.restore();
             Code.expect(response.result).to.equal(expectedError);
@@ -420,7 +419,7 @@ lab.describe('Game Tests', () => {
                     location: 'Time Warner Cable Arena'
                 }]
             }
-        }
+        };
 
         Sinon
         .stub(Wreck, 'get')
@@ -450,9 +449,9 @@ lab.describe('Game Tests', () => {
             team: 'ORL'
         };
 
-        const req = { method: 'POST', url: '/api/games', payload: payload };
+        const req = { method: 'POST', url: '/api/games', payload };
 
-        mock.server.inject(req, function (response) {
+        mock.server.inject(req, (response) => {
 
             Wreck.get.restore();
             Games.find.restore();
@@ -484,7 +483,7 @@ lab.describe('Game Tests', () => {
                     location: 'Time Warner Cable Arena'
                 }]
             }
-        }
+        };
 
         Sinon
         .stub(Wreck, 'get')
@@ -506,9 +505,9 @@ lab.describe('Game Tests', () => {
             team: 'ORL'
         };
 
-        const req = { method: 'POST', url: '/api/games', payload: payload };
+        const req = { method: 'POST', url: '/api/games', payload };
 
-        mock.server.inject(req, function (response) {
+        mock.server.inject(req, (response) => {
 
             Wreck.get.restore();
             Games.find.restore();
@@ -564,9 +563,9 @@ lab.describe('Game Tests', () => {
             team: 'ORL'
         };
 
-        const req = { method: 'POST', url: '/api/games', payload: payload };
+        const req = { method: 'POST', url: '/api/games', payload };
 
-        mock.server.inject(req, function (response) {
+        mock.server.inject(req, (response) => {
 
             Wreck.get.restore();
             Games.find.restore();
@@ -625,9 +624,9 @@ lab.describe('Game Tests', () => {
             team: 'ORL'
         };
 
-        const req = { method: 'POST', url: '/api/games', payload: payload };
+        const req = { method: 'POST', url: '/api/games', payload };
 
-        mock.server.inject(req, function (response) {
+        mock.server.inject(req, (response) => {
 
             Wreck.get.restore();
             Games.find.restore();

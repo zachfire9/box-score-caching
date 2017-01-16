@@ -2,20 +2,13 @@
 
 const Later = require('later');
 const Moment = require('moment');
-const Underscore = require('underscore');
-const Wreck = require('wreck');
-
-const Config = require('../../config');
 
 exports.register = function (server, options, next) {
 
     if (options.pollingEnabled) {
-        const schedule = Later.parse.text(options.pollingSchedule);
-        const timer = Later.setInterval(getGames, schedule);
+        const getGames =  function () {
 
-        function getGames() {
-
-            server.methods.getGames(server, Moment().utc().format('x'), function (err, result) {
+            server.methods.getGames(server, Moment().utc().format('x'), (err, result) => {
 
                 if (err) {
                     server.log('error', err);
@@ -25,7 +18,10 @@ exports.register = function (server, options, next) {
                 server.log('info', result);
                 return next();
             });
-        };        
+        };
+
+        const schedule = Later.parse.text(options.pollingSchedule);
+        Later.setInterval(getGames, schedule);
     }
 
     next();

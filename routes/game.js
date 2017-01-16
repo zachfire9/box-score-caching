@@ -1,9 +1,7 @@
 'use strict';
 
 const Boom = require('boom');
-const Later = require('later');
 const Moment = require('moment-timezone');
-const Mongoose = require('mongoose');
 const Underscore = require('underscore');
 const Wreck = require('wreck');
 
@@ -33,7 +31,7 @@ const createGamesValidation = function (request, reply) {
 
 const getGamesDateFromFeed = function (request, reply) {
 
-    const endpoint = Config.get('/feed') + request.payload.season + '/daily_game_schedule.json?fordate=' + request.payload.date
+    const endpoint = Config.get('/feed') + request.payload.season + '/daily_game_schedule.json?fordate=' + request.payload.date;
     Wreck.get(endpoint, options, (err, res, payload) => {
 
         if (err || payload instanceof Buffer) {
@@ -58,21 +56,21 @@ const findTeamInGameFeed = function (request, reply) {
     const feedGames = request.pre.feedGames;
     let gameInfo = null;
 
-    for (let count = 0; count < feedGames.length; count++) {
-        if (feedGames[count].awayTeam.Abbreviation === request.payload.team || feedGames[count].homeTeam.Abbreviation === request.payload.team) {
-            const homeTeamAbv = feedGames[count].homeTeam.Abbreviation;
-            const awayTeamAbv = feedGames[count].awayTeam.Abbreviation;
+    for (let i = 0; i < feedGames.length; ++i) {
+        if (feedGames[i].awayTeam.Abbreviation === request.payload.team || feedGames[i].homeTeam.Abbreviation === request.payload.team) {
+            const homeTeamAbv = feedGames[i].homeTeam.Abbreviation;
+            const awayTeamAbv = feedGames[i].awayTeam.Abbreviation;
             const feedId = request.payload.date + '-' + awayTeamAbv + '-' + homeTeamAbv;
-            const startTime = Moment.tz(feedGames[count].date + ' ' + feedGames[count].time, 'YYYY-MM-DD HH:mmA', 'America/New_York');
-            const endTime = Moment.tz(feedGames[count].date + ' ' + feedGames[count].time, 'YYYY-MM-DD HH:mmA', 'America/New_York').add(4, 'hours');
+            const startTime = Moment.tz(feedGames[i].date + ' ' + feedGames[i].time, 'YYYY-MM-DD HH:mmA', 'America/New_York');
+            const endTime = Moment.tz(feedGames[i].date + ' ' + feedGames[i].time, 'YYYY-MM-DD HH:mmA', 'America/New_York').add(4, 'hours');
 
             // @TODO add a test to make sure time is UTC
             gameInfo = {
-                feedId: feedId,
+                feedId,
                 seasonId: request.payload.season,
                 date: request.payload.date,
-                startTime: parseInt(startTime.utcOffset("+05:00").format('x')),
-                endTime: parseInt(endTime.utcOffset("+05:00").format('x'))
+                startTime: parseInt(startTime.utcOffset('+05:00').format('x')),
+                endTime: parseInt(endTime.utcOffset('+05:00').format('x'))
             };
         }
     }
@@ -86,7 +84,7 @@ const findTeamInGameFeed = function (request, reply) {
 
 const checkForExistingGame = function (request, reply) {
 
-    GamesModel.find({ feedId: request.pre.gameInfo.feedId }, function(err, gameRecords) {
+    GamesModel.find({ feedId: request.pre.gameInfo.feedId }, (err, gameRecords) => {
 
         if (err) {
             request.log('error', err);
@@ -95,7 +93,7 @@ const checkForExistingGame = function (request, reply) {
 
         if (!Underscore.isEmpty(gameRecords)) {
             return reply(Boom.conflict('This game has already been scheduled.'));
-        } 
+        }
 
         return reply(null);
     });
@@ -104,7 +102,7 @@ const checkForExistingGame = function (request, reply) {
 const createGameRecord = function (request, reply) {
 
     const game = new GamesModel(request.pre.gameInfo);
-    game.save(function (err, result) {
+    game.save((err, result) => {
 
         if (err) {
             request.log('error', err);
@@ -116,9 +114,9 @@ const createGameRecord = function (request, reply) {
 };
 
 module.exports = [
-    { 
-        method: 'GET', 
-        path: '/api/games', 
+    {
+        method: 'GET',
+        path: '/api/games',
         handler: function (request, reply) {
 
             const query = request.query;
@@ -129,21 +127,21 @@ module.exports = [
                 delete query.searchTime;
             }
 
-            GamesModel.find(query, function(err, gameRecord) {
+            GamesModel.find(query, (err, gameRecord) => {
 
                 if (err) {
                     request.log('error', err);
                     return reply(Boom.badImplementation());
                 }
 
-                return reply(gameRecord)
+                return reply(gameRecord);
 
             });
         }
     },
-    { 
-        method: 'POST', 
-        path: '/api/games', 
+    {
+        method: 'POST',
+        path: '/api/games',
         config: {
             pre: [
                 { method: createGamesValidation, assign: 'validation' },
@@ -156,6 +154,6 @@ module.exports = [
         handler: function (request, reply) {
 
             return reply(request.pre.gameRecord);
-        } 
+        }
     }
 ];

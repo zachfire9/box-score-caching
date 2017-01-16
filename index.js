@@ -11,79 +11,97 @@ server.connection({ port: Config.get('/port') });
 
 const mongoUri = Config.get('/mongoUri');
 
-server.on('stop', function () { Mongoose.disconnect(); });
+server.on('stop', () => {
 
-Mongoose.connection.on('error', function(err) {
-    server.log(['plugin', 'error', 'mongoose'], "Mongoose error: " + (err.stack || err));
+    Mongoose.disconnect();
+});
+
+Mongoose.connection.on('error', (err) => {
+
+    server.log(['plugin', 'error', 'mongoose'], 'Mongoose error: ' + (err.stack || err));
     throw err;
 });
 
-Mongoose.connection.on('open', function() {
-    server.log(['plugin', 'info', 'mongoose'], "Mongoose connected to " + mongoUri);
+Mongoose.connection.on('open', () => {
+
+    server.log(['plugin', 'info', 'mongoose'], 'Mongoose connected to ' + mongoUri);
 });
 
-Mongoose.connection.on('close', function(err) {
-    server.log(['plugin', 'info', 'mongoose'], "Mongoose disconnected from " + mongoUri);
+Mongoose.connection.on('close', (err) => {
+
+    if (err) {
+        server.log(['plugin', 'error', 'mongoose'], 'Mongoose error: ' + (err.stack || err));
+        throw err;
+    }
+
+    server.log(['plugin', 'info', 'mongoose'], 'Mongoose disconnected from ' + mongoUri);
 });
 
-Mongoose.connection.on('reconnected', function(err) {
-    server.log(['plugin', 'info', 'mongoose'], "Mongoose reconnected to " + mongoUri);
+Mongoose.connection.on('reconnected', (err) => {
+
+    if (err) {
+        server.log(['plugin', 'error', 'mongoose'], 'Mongoose error: ' + (err.stack || err));
+        throw err;
+    }
+
+    server.log(['plugin', 'info', 'mongoose'], 'Mongoose reconnected to ' + mongoUri);
 });
 
-Mongoose.connection.on('timeout', function(err) {
-    server.log(['plugin', 'info', 'mongoose'], "Mongoose timeout: " + (err.stack || err));
+Mongoose.connection.on('timeout', (err) => {
+
+    server.log(['plugin', 'info', 'mongoose'], 'Mongoose timeout: ' + (err.stack || err));
 });
 
 if (process.env.NODE_ENV !== 'production') {
     Mongoose.set('debug', true);
 }
 
-server.log(['plugin', 'info', 'mongoose'], "Mongoose connecting to " + mongoUri);
+server.log(['plugin', 'info', 'mongoose'], 'Mongoose connecting to ' + mongoUri);
 Mongoose.connect(mongoUri);
 
 server.register(
-    require('vision'), 
+    require('vision'),
     (err) => {
 
-    if (err) {
-        console.log("Failed to load vision.");
-    }
-
-    server.views({
-        engines: { jade: require('jade') },
-        path: __dirname + '/templates',
-        compileOptions: {
-            pretty: true
+        if (err) {
+            console.log('Failed to load vision.');
         }
+
+        server.views({
+            engines: { jade: require('jade') },
+            path: __dirname + '/templates',
+            compileOptions: {
+                pretty: true
+            }
+        });
     });
-});
 
 server.register(
-    require('inert'), 
+    require('inert'),
     (err) => {
 
-    if (err) {
-        console.log("Failed to load inert.");
-    }
-
-    server.route({
-        method: 'GET',
-        path: '/assets/js/main.js',
-        handler: function (request, reply) {
-
-            reply.file('./assets/js/main.js');
+        if (err) {
+            console.log('Failed to load inert.');
         }
-    });
 
-    server.route({
-        method: 'GET',
-        path: '/assets/css/main.css',
-        handler: function (request, reply) {
+        server.route({
+            method: 'GET',
+            path: '/assets/js/main.js',
+            handler: function (request, reply) {
 
-            reply.file('./assets/css/main.css');
-        }
+                reply.file('./assets/js/main.js');
+            }
+        });
+
+        server.route({
+            method: 'GET',
+            path: '/assets/css/main.css',
+            handler: function (request, reply) {
+
+                reply.file('./assets/css/main.css');
+            }
+        });
     });
-});
 
 server.route(require('./routes'));
 require('./methods')(server, {});
@@ -98,7 +116,7 @@ server.register({
 }, (err) => {
 
     if (err) {
-        console.log("Failed to load box-score-polling.");
+        console.log('Failed to load box-score-polling.');
     }
 });
 

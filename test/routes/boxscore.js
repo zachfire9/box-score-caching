@@ -18,23 +18,23 @@ lab.describe('Boxscore tests', () => {
         server: null
     };
 
-    lab.beforeEach(function (done) {
-        
+    lab.beforeEach((done) => {
+
         mock.server = new Hapi.Server();
-        mock.server.connection({port: 8081});
+        mock.server.connection({ port: 8081 });
         mock.server.route(Routes);
         done();
     });
 
     lab.test('Create boxscore', (done) => {
-        
+
         Sinon
         .stub(Boxscores.prototype, 'save')
         .yields(null, {});
 
         const req = { method: 'POST', url: '/api/boxscores', payload: {} };
 
-        mock.server.inject(req, function (response) {
+        mock.server.inject(req, (response) => {
 
             Boxscores.prototype.save.restore();
             Code.expect(response.result).to.equal({});
@@ -43,7 +43,7 @@ lab.describe('Boxscore tests', () => {
     });
 
     lab.test('Create boxscore error', (done) => {
-        
+
         Sinon
         .stub(Boxscores.prototype, 'save')
         .yields(new Error('This is a test DB error'), null);
@@ -56,7 +56,7 @@ lab.describe('Boxscore tests', () => {
 
         const req = { method: 'POST', url: '/api/boxscores', payload: {} };
 
-        mock.server.inject(req, function (response) {
+        mock.server.inject(req, (response) => {
 
             Boxscores.prototype.save.restore();
             Code.expect(response.result).to.equal(expectedError);
@@ -65,12 +65,12 @@ lab.describe('Boxscore tests', () => {
     });
 
     lab.test('Get boxscores', (done) => {
-        
+
         Sinon
         .stub(Boxscores, 'find')
         .yields(null, []);
 
-        mock.server.inject('/api/boxscores', function (response) {
+        mock.server.inject('/api/boxscores', (response) => {
 
             Boxscores.find.restore();
             Code.expect(response.result).to.equal([]);
@@ -90,7 +90,7 @@ lab.describe('Boxscore tests', () => {
             'statusCode': 500
         };
 
-        mock.server.inject('/api/boxscores', function (response) {
+        mock.server.inject('/api/boxscores', (response) => {
 
             Boxscores.find.restore();
             Code.expect(response.result).to.equal(expectedError);
@@ -99,7 +99,7 @@ lab.describe('Boxscore tests', () => {
     });
 
     lab.test('Get boxscores - findClosestToTime - quarter 1', (done) => {
-        
+
         const expectedQuery = {
             gameId: '20170101-ORL-IND',
             currentTime: { '$lte': 10.5 }
@@ -110,7 +110,6 @@ lab.describe('Boxscore tests', () => {
         .withArgs({ $query: expectedQuery, $orderby: { currentTime : -1 } })
         .yields(null, []);
 
-        const season = '2016-2017-regular';
         const gameId = '20170101-ORL-IND';
         const quarter = 1;
         const minutes = 10;
@@ -119,9 +118,7 @@ lab.describe('Boxscore tests', () => {
         const path = '/api/boxscores';
         const querystring = '?findClosestToTime=true&gameId=' + gameId + '&quarter=' + quarter + '&minutes=' + minutes + '&seconds=' + seconds;
 
-        mock.server.inject(Url.resolve(path, querystring), function (response) {
-
-            const expectedQuery = {};
+        mock.server.inject(Url.resolve(path, querystring), (response) => {
 
             Boxscores.find.restore();
             Code.expect(response.result).to.equal([]);
@@ -130,7 +127,7 @@ lab.describe('Boxscore tests', () => {
     });
 
     lab.test('Get boxscores - findClosestToTime - quarter 2', (done) => {
-        
+
         const expectedQuery = {
             gameId: '20170101-ORL-IND',
             currentTime: { '$lte': 22.5 }
@@ -141,7 +138,6 @@ lab.describe('Boxscore tests', () => {
         .withArgs({ $query: expectedQuery, $orderby: { currentTime : -1 } })
         .yields(null, []);
 
-        const season = '2016-2017-regular';
         const gameId = '20170101-ORL-IND';
         const quarter = 2;
         const minutes = 10;
@@ -150,9 +146,7 @@ lab.describe('Boxscore tests', () => {
         const path = '/api/boxscores';
         const querystring = '?findClosestToTime=true&gameId=' + gameId + '&quarter=' + quarter + '&minutes=' + minutes + '&seconds=' + seconds;
 
-        mock.server.inject(Url.resolve(path, querystring), function (response) {
-
-            const expectedQuery = {};
+        mock.server.inject(Url.resolve(path, querystring), (response) => {
 
             Boxscores.find.restore();
             Code.expect(response.result).to.equal([]);
@@ -161,12 +155,12 @@ lab.describe('Boxscore tests', () => {
     });
 
     lab.test('Get boxscore', (done) => {
-        
+
         Sinon
         .stub(Boxscores, 'find')
         .yields(null, []);
 
-        mock.server.inject('/api/boxscores/1234', function (response) {
+        mock.server.inject('/api/boxscores/1234', (response) => {
 
             Boxscores.find.restore();
             Code.expect(response.result).to.equal([]);
@@ -175,7 +169,7 @@ lab.describe('Boxscore tests', () => {
     });
 
     lab.test('Get boxscore error', (done) => {
-        
+
         Sinon
         .stub(Boxscores, 'find')
         .yields(new Error('This is a test DB error'), null);
@@ -186,7 +180,7 @@ lab.describe('Boxscore tests', () => {
             'statusCode': 500
         };
 
-        mock.server.inject('/api/boxscores/1234', function (response) {
+        mock.server.inject('/api/boxscores/1234', (response) => {
 
             Boxscores.find.restore();
             Code.expect(response.result).to.equal(expectedError);

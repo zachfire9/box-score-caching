@@ -37,6 +37,8 @@
   },
   "devDependencies": {
     "code": "^4.0.0",
+    "eslint": "^3.13.1",
+    "eslint-config-hapi": "^10.0.0",
     "lab": "^11.2.1",
     "sinon": "^1.17.7"
   }

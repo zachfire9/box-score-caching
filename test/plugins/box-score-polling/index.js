@@ -6,7 +6,6 @@ const Lab = require('lab');
 const Moment = require('moment');
 const Mongoose = require('mongoose');
 const Sinon = require('sinon');
-const Url = require('url');
 const Wreck = require('wreck');
 
 const BoxScorePollingPlugin = require('../../../plugins/box-score-polling');
@@ -22,10 +21,10 @@ lab.describe('Boxs Score Polling tests', () => {
         server: null
     };
 
-    lab.beforeEach(function (done) {
-        
+    lab.beforeEach((done) => {
+
         mock.server = new Hapi.Server({ debug: { request: ['error', 'info'] } });
-        mock.server.connection({port: 8081});
+        mock.server.connection({ port: 8081 });
         require('../../../methods')(mock.server, {});
         mock.server.register({
             register: BoxScorePollingPlugin,
@@ -37,7 +36,7 @@ lab.describe('Boxs Score Polling tests', () => {
         }, (err) => {
 
             if (err) {
-                console.log("Failed to load box-score-polling.");
+                console.log('Failed to load box-score-polling.');
             }
         });
 
@@ -51,7 +50,7 @@ lab.describe('Boxs Score Polling tests', () => {
         .stub(Games, 'find')
         .yields(new Error('This is a test DB error'), null);
 
-        mock.server.methods.getGames(mock.server, Moment().utc().format('x'), function (err, result) {
+        mock.server.methods.getGames(mock.server, Moment().utc().format('x'), (err, result) => {
 
             Games.find.restore();
             Code.expect(err).to.equal('Internal Server Error');
@@ -65,9 +64,14 @@ lab.describe('Boxs Score Polling tests', () => {
         .stub(Games, 'find')
         .yields(null, {});
 
-        mock.server.methods.getGames(mock.server, Moment().utc().format('x'), function (err, result) {
+        mock.server.methods.getGames(mock.server, Moment().utc().format('x'), (err, result) => {
 
             Games.find.restore();
+
+            if (err) {
+                return done(err);
+            }
+
             Code.expect(result).to.equal('No games were found to be polled at this time.');
             done();
         });
@@ -75,7 +79,7 @@ lab.describe('Boxs Score Polling tests', () => {
 
     lab.test('Find game boxscore error', { timeout: 5000 }, (done) => {
 
-        let gameRecord = {
+        const gameRecord = {
 
             toJSON: function () {
 
@@ -99,10 +103,15 @@ lab.describe('Boxs Score Polling tests', () => {
         .stub(Wreck, 'get')
         .yields(new Error('This is a test Wreck error'), null, null);
 
-        mock.server.methods.getGames(mock.server, Moment().utc().format('x'), function (err, result) {
+        mock.server.methods.getGames(mock.server, Moment().utc().format('x'), (err, result) => {
 
             Games.find.restore();
             Wreck.get.restore();
+
+            if (err) {
+                return done(err);
+            }
+
             Code.expect(result).to.equal([gameRecord]);
             done();
         });
@@ -118,18 +127,17 @@ lab.describe('Boxs Score Polling tests', () => {
             '@number': 1,
             scoring: {
                 scoringPlay: [{
-                   time: '10:01' 
+                    time: '10:01'
                 }]
             }
         }];
 
-        mock.server.methods.createBoxscore(mock.server, '20170101-ORL-CHA', mockQuarter, function (response) {
+        mock.server.methods.createBoxscore(mock.server, '20170101-ORL-CHA', mockQuarter, (response) => {
 
             const expectedResponse = {
-                "currentTime": 10.016666666666667,
-                "gameId": "20170101-ORL-CHA"
-            }
-
+                'currentTime': 10.016666666666667,
+                'gameId': '20170101-ORL-CHA'
+            };
 
             Boxscores.prototype.save.restore();
             Code.expect(response).to.equal(expectedResponse);

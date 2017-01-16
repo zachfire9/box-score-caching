@@ -6,7 +6,7 @@ const Underscore = require('underscore');
 const createGameFormHandler = function (request, reply) {
 
     reply.view('creategameform', {
-        title: 'Create Game',
+        title: 'Create Game'
     });
 };
 
@@ -18,12 +18,12 @@ const gameFormHandler = function (request, reply) {
         team: request.payload.team
     };
 
-    const req = { method: 'POST', url: '/api/games', payload: payload };
+    const req = { method: 'POST', url: '/api/games', payload };
 
-    request.server.inject(req, function (response) {
+    request.server.inject(req, (response) => {
 
-        let viewObject = {
-            title: 'Game',
+        const viewObject = {
+            title: 'Game'
         };
 
         if (response.result && response.result.statusCode && (response.result.statusCode < 200 || response.result.statusCode > 299)) {
@@ -34,10 +34,10 @@ const gameFormHandler = function (request, reply) {
             return reply.view('error', viewObject);
         }
 
-        const record = response.result.toJSON()
-        const date = Moment(record.date).format("dddd, MMMM Do YYYY");
-        const startTime = Moment(record.startTime).utcOffset("-05:00").format("h:mm:ss a");
-        const endTime = Moment(record.endTime).utcOffset("-05:00").format("h:mm:ss a");
+        const record = response.result.toJSON();
+        const date = Moment(record.date).format('dddd, MMMM Do YYYY');
+        const startTime = Moment(record.startTime).utcOffset('-05:00').format('h:mm:ss a');
+        const endTime = Moment(record.endTime).utcOffset('-05:00').format('h:mm:ss a');
         viewObject.date = date;
         viewObject.startTime = startTime;
         viewObject.endTime = endTime;
@@ -48,13 +48,12 @@ const gameFormHandler = function (request, reply) {
 const boxscoreFormHandler = function (request, reply) {
 
     reply.view('boxscoreform', {
-        title: 'Boxscore',
+        title: 'Boxscore'
     });
 };
 
 const boxscoreHandler = function (request, reply) {
 
-    const season = request.payload.season;
     const date = request.payload.date;
     const teamAway = request.payload.teamAway;
     const teamHome = request.payload.teamHome;
@@ -64,10 +63,10 @@ const boxscoreHandler = function (request, reply) {
     const minutes = 11 - request.payload.minutes;
     const seconds = 60 - request.payload.seconds;
 
-    request.server.inject('/api/boxscores?findClosestToTime=true&gameId=' + gameId + '&quarter=' + quarter + '&minutes=' + minutes + '&seconds=' + seconds, function (response) {
+    request.server.inject('/api/boxscores?findClosestToTime=true&gameId=' + gameId + '&quarter=' + quarter + '&minutes=' + minutes + '&seconds=' + seconds, (response) => {
 
-        let viewObject = {
-            title: 'Boxscore',
+        const viewObject = {
+            title: 'Boxscore'
         };
 
         if (response.result && response.result.length > 0) {
@@ -77,7 +76,8 @@ const boxscoreHandler = function (request, reply) {
             viewObject.lastScoringPlay = Underscore.last(viewObject.lastQuarter.scoring.scoringPlay);
 
             reply.view('boxscore', viewObject);
-        } else {
+        }
+        else {
             viewObject.errorMessage = 'The boxscore requested does not exist.';
             reply.view('error', viewObject);
         }
@@ -85,29 +85,29 @@ const boxscoreHandler = function (request, reply) {
 };
 
 module.exports = [
-    { 
-        method: 'GET', 
-        path: '/', 
-        handler: boxscoreFormHandler 
+    {
+        method: 'GET',
+        path: '/',
+        handler: boxscoreFormHandler
     },
-    { 
-        method: 'GET', 
-        path: '/boxscoreform', 
-        handler: boxscoreFormHandler 
+    {
+        method: 'GET',
+        path: '/boxscoreform',
+        handler: boxscoreFormHandler
     },
-    { 
-        method: 'POST', 
-        path: '/boxscore', 
-        handler: boxscoreHandler 
+    {
+        method: 'POST',
+        path: '/boxscore',
+        handler: boxscoreHandler
     },
-    { 
-        method: 'GET', 
-        path: '/creategameform', 
-        handler: createGameFormHandler 
+    {
+        method: 'GET',
+        path: '/creategameform',
+        handler: createGameFormHandler
     },
-    { 
-        method: 'POST', 
-        path: '/game', 
-        handler: gameFormHandler 
+    {
+        method: 'POST',
+        path: '/game',
+        handler: gameFormHandler
     }
 ];

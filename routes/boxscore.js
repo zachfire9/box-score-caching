@@ -1,26 +1,18 @@
 'use strict';
 
 const Boom = require('boom');
-const Mongoose = require('mongoose');
-const Moment = require('moment');
-const Underscore = require('underscore');
 
 const BoxscoresModel = require('../models/boxscores/schema');
-const GamesModel = require('../models/games/schema');
-
-const options = {
-    json: true
-};
 
 module.exports = [
-    { 
-        method: 'POST', 
-        path: '/api/boxscores', 
+    {
+        method: 'POST',
+        path: '/api/boxscores',
         handler: function (request, reply) {
 
             const payload = request.payload;
             const boxscore = new BoxscoresModel(payload);
-            boxscore.save(function (err, result) {
+            boxscore.save((err, result) => {
 
                 if (err) {
                     request.log('error', err);
@@ -29,11 +21,11 @@ module.exports = [
 
                 return reply(result);
             });
-        } 
+        }
     },
-    { 
-        method: 'GET', 
-        path: '/api/boxscores', 
+    {
+        method: 'GET',
+        path: '/api/boxscores',
         handler: function (request, reply) {
 
             let query = request.query;
@@ -50,16 +42,17 @@ module.exports = [
 
                 if (quarter === 1) {
                     currentTime = minutes + (seconds / 60);
-                } else {
+                }
+                else {
                     currentTime = ((quarter - 1) * 12) + minutes + (seconds / 60);
                 }
 
                 query.currentTime = { '$lte': currentTime };
                 // Return results in descending order.
-                query = { $query: query, $orderby: { currentTime : -1 } }
+                query = { $query: query, $orderby: { currentTime : -1 } };
             }
 
-            BoxscoresModel.find(query, function(err, boxscoreRecord) {
+            BoxscoresModel.find(query, (err, boxscoreRecord) => {
 
                 if (err) {
                     request.log('error', err);
@@ -70,15 +63,15 @@ module.exports = [
             });
         }
     },
-    { 
-        method: 'GET', 
-        path: '/api/boxscores/{boxscoreId}', 
+    {
+        method: 'GET',
+        path: '/api/boxscores/{boxscoreId}',
         handler: function (request, reply) {
 
             const query = request.query;
             query._id = request.params.boxscoreId;
 
-            BoxscoresModel.find(query, function(err, boxscoreRecord) {
+            BoxscoresModel.find(query, (err, boxscoreRecord) => {
 
                 if (err) {
                     request.log('error', err);
@@ -87,6 +80,6 @@ module.exports = [
 
                 return reply(boxscoreRecord);
             });
-        } 
+        }
     }
 ];
