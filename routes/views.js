@@ -22,16 +22,22 @@ const gameFormHandler = function (request, reply) {
 
     request.server.inject(req, function (response) {
 
+        let viewObject = {
+            title: 'Game',
+        };
+
+        if (response.result && response.result.statusCode && (response.result.statusCode < 200 || response.result.statusCode > 299)) {
+            return reply.view('error', viewObject);
+        }
+
         const record = response.result.toJSON()
         const date = Moment(record.date).format("dddd, MMMM Do YYYY");
         const startTime = Moment(record.startTime).utcOffset("-05:00").format("h:mm:ss a");
         const endTime = Moment(record.endTime).utcOffset("-05:00").format("h:mm:ss a");
-        reply.view('game', {
-            title: 'Game',
-            date: date,
-            startTime: startTime,
-            endTime: endTime
-        });
+        viewObject.date = date;
+        viewObject.startTime = startTime;
+        viewObject.endTime = endTime;
+        reply.view('game', viewObject);
     });
 };
 
@@ -58,7 +64,6 @@ const boxscoreHandler = function (request, reply) {
 
         let viewObject = {
             title: 'Boxscore',
-            error: true
         };
 
         if (response.result && response.result.length > 0) {
@@ -66,13 +71,20 @@ const boxscoreHandler = function (request, reply) {
             viewObject.message = record;
             viewObject.lastQuarter = Underscore.last(record.gameboxscore.quarterSummary.quarter);
             viewObject.lastScoringPlay = Underscore.last(viewObject.lastQuarter.scoring.scoringPlay);
-        }
 
-        reply.view('boxscore', viewObject);
+            reply.view('boxscore', viewObject);
+        } else {
+            reply.view('error', viewObject);
+        }
     });
 };
 
 module.exports = [
+    { 
+        method: 'GET', 
+        path: '/', 
+        handler: boxscoreFormHandler 
+    },
     { 
         method: 'GET', 
         path: '/boxscoreform', 

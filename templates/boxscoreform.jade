@@ -89,6 +89,7 @@ block body
                     label Game Time
                 div.nopadding.col-sm-3
                     select(name="minutes", required).form-control
+                        option(value=0) 00
                         option(value=1) 01
                         option(value=2) 02
                         option(value=3) 03
@@ -104,6 +105,7 @@ block body
                     |:
                 div.nopadding.col-sm-3
                     select(name="seconds", required).form-control
+                        option(value=0) 00
                         option(value=1) 01
                         option(value=2) 02
                         option(value=3) 03
