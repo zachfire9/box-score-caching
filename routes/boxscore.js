@@ -8,6 +8,11 @@ module.exports = [
     {
         method: 'POST',
         path: '/api/boxscores',
+        config: {
+            description: 'CREATE boxscore',
+            notes: 'Adds a new boxscore to the collection.',
+            tags: ['api']
+        },
         handler: function (request, reply) {
 
             const payload = request.payload;
@@ -26,6 +31,11 @@ module.exports = [
     {
         method: 'GET',
         path: '/api/boxscores',
+        config: {
+            description: 'READ boxscores',
+            notes: 'Returns all the boxscores and filters by search options in the querystring.',
+            tags: ['api']
+        },
         handler: function (request, reply) {
 
             let query = request.query;
@@ -66,6 +76,11 @@ module.exports = [
     {
         method: 'GET',
         path: '/api/boxscores/{boxscoreId}',
+        config: {
+            description: 'READ boxscore by ID',
+            notes: 'Returns the boxscore with the associated ID and filters by search options in the querystring.',
+            tags: ['api']
+        },
         handler: function (request, reply) {
 
             const query = request.query;

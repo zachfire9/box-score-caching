@@ -117,6 +117,11 @@ module.exports = [
     {
         method: 'GET',
         path: '/api/games',
+        config: {
+            description: 'READ games',
+            notes: 'Returns all the games and filters by search options in the querystring.',
+            tags: ['api']
+        },
         handler: function (request, reply) {
 
             const query = request.query;
@@ -143,6 +148,9 @@ module.exports = [
         method: 'POST',
         path: '/api/games',
         config: {
+            description: 'CREATE games',
+            notes: 'Adds a new game to the collection.',
+            tags: ['api'],
             pre: [
                 { method: createGamesValidation, assign: 'validation' },
                 { method: getGamesDateFromFeed, assign: 'feedGames' },

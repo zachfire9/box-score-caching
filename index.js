@@ -4,6 +4,7 @@ const Hapi = require('hapi');
 const Mongoose = require('mongoose');
 
 const Config = require('./config');
+const Package = require('./package');
 
 const server = new Hapi.Server();
 
@@ -102,6 +103,21 @@ server.register(
             }
         });
     });
+
+server.register({
+    register: require('hapi-swagger'),
+    options: {
+        info: {
+            'title': 'Test API Documentation',
+            'version': Package.version
+        }
+    }
+}, (err) => {
+
+    if (err) {
+        console.log('Failed to load hapi-swagger.');
+    }
+});
 
 server.route(require('./routes'));
 require('./methods')(server, {});
