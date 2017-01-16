@@ -27,6 +27,10 @@ const gameFormHandler = function (request, reply) {
         };
 
         if (response.result && response.result.statusCode && (response.result.statusCode < 200 || response.result.statusCode > 299)) {
+            if (response.result.statusCode === 404) {
+                viewObject.errorMessage = 'The team selected is not playing on this day.';
+            }
+
             return reply.view('error', viewObject);
         }
 
@@ -74,6 +78,7 @@ const boxscoreHandler = function (request, reply) {
 
             reply.view('boxscore', viewObject);
         } else {
+            viewObject.errorMessage = 'The boxscore requested does not exist.';
             reply.view('error', viewObject);
         }
     });
